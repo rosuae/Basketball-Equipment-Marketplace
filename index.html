@@ -8,34 +8,93 @@
     <meta name="description"
         content="Combina un magazin de retail pentru echipament de baschet cu un marketplace C2C pentru tranzactionarea de sneakersi si streetwear.
                 Aplicatia faciliteaza atat vanzarile directe, cat si intermedierea schimburilor sigure intre utilizatori independenti.">
-    <meta name="keywords" content="NBA, tricou, baschet, sneakers, streetwear, magazin online, marketplace C2C, 
+    <meta name="keywords"
+        content="NBA, tricou, baschet, sneakers, streetwear, magazin online, marketplace C2C, 
                 adidasi, imbracaminte, echipament sportiv, vanzari directe, schimburi sigure, comunitate pasionati baschet, Allen Iverson">
-    <title>BBZone</title>
-    <link rel="icon" type="image/png" href="./src/images/favicon/favicon-96x96.png" sizes="96x96" />
-    <link rel="icon" type="image/svg+xml" href="./src/images/favicon/favicon.svg" />
-    <link rel="shortcut icon" href="./src/images/favicon/favicon.ico" />
-    <link rel="apple-touch-icon" sizes="180x180" href="./src/images/favicon/apple-touch-icon.png" />
-    <link rel="manifest" href="./src/images/favicon/site.webmanifest" />
+    <meta name="msapplication-TileColor" content="black">
+    <title>Iverson Era</title>
+    <link rel="icon" type="image/png" href="./resurse/imagini/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="./resurse/imagini/favicon/favicon.svg" />
+    <link rel="shortcut icon" href="./resurse/imagini/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="./resurse/imagini/favicon/apple-touch-icon.png" />
+    <link rel="manifest" href="./resurse/imagini/favicon/site.webmanifest" />
+
+    <link rel="stylesheet" href="./resurse/css/general.css" type="text/css" />
+    <link rel="stylesheet" href="./resurse/css/general1000.css" type="text/css" media="screen and (max-width:1000px)" />
+    <link rel="stylesheet" href="./resurse/css/general700.css" type="text/css" media="screen and (max-width:700px)" />
+    <link rel="stylesheet" href="./resurse/css/nav.css" type="text/css" />
+
+    <link rel="stylesheet" href="./resurse/css/nav1000.css" type="text/css" media="screen and (max-width:1000px)" />
+
+    <link rel="stylesheet" href="./resurse/css/nav700.css" type="text/css" media="screen and (max-width:700px)" />
+    <link rel="stylesheet" href="./resurse/css/galerie-statica.css" type="text/css" />
+    <link rel="stylesheet" href="./resurse/css/galerie-statica-500.css" type="text/css"
+        media="screen and (max-width:500px)" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Eater&family=Madimi+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" />
+
 </head>
 
 <body>
-    <header>
-        <h1>Tehnici web</h1>
-        <nav>
-            <ul>
-                <li>Acasa
-                    <ul>
-                        <li><a href="#welcome">Bine ati venit!</a></li>
-                        <li><a href="#promotii">Promotii</a></li>
-                    </ul>
-                </li>
-                <li>Produse</li>
-                <li>Inregistrare</li>
-            </ul>
-        </nav>
-    </header>
+
+    <nav>
+        <ul class="meniu">
+            <li>
+                <div class="text-icon" id="acasa">Noutati</div>
+                <ul>
+                    <li><a href="#welcome">Bine ati venit</a></li>
+                    <li><a href="#promotii">Promotii</a></li>
+                </ul>
+            </li>
+            <li>
+                <div class="text-icon" id="acasa">Adidasi</div>
+                <ul>
+                    <li><a href="#welcome">Bine ati venit</a></li>
+                    <li><a href="#promotii">Promotii</a></li>
+                </ul>
+
+
+            </li>
+            <li>
+                <div class="text-icon" id="acasa">Imbracaminte</div>
+                <ul>
+                    <li><a href="#welcome">Bine ati venit</a></li>
+                    <li><a href="#promotii">Promotii</a></li>
+                </ul>
+
+
+            </li>
+            <li>
+                <div class="text-icon" id="acasa">Accesorii</div>
+                <ul>
+                    <li><a href="#welcome">Bine ati venit</a></li>
+                    <li><a href="#promotii">Promotii</a></li>
+                </ul>
+
+
+            </li>
+            <li>
+                <div class="text-icon" id="acasa">Marci</div>
+                <ul>
+                    <li><a href="#welcome">Bine ati venit</a></li>
+                    <li><a href="#promotii">Promotii</a></li>
+                </ul>
+            </li>
+            <input type="search" id="ch-menu" />
+            <button id="ch-menu"> <img src="src/images/account.png" alt="menu"> </button>
+            <button id="ch-menu"> <img src="src/images/basket.png" alt="menu"> </button>
+        </ul>
+    </nav>
+    <section id="test">
+        <header class="c1" id="titlu">
+            <h1 id="t">Cofetaria <span>Dulcelind</span></h1>
+        </header>
+    </section>
     <main> <!--  comentariu -->
         <div id="grid-pagina">
+
             <section id="welcome">
                 <hgroup>
                     <h2>Bine ati venit</h2>
@@ -56,15 +115,12 @@
                     domiciliu, cu ajutorul ofertei noastre de livrare a produselor prin curier.</p>
                 <div id="dv-prezentare-1">
                     <div id="dv-prezentare">
-                        <figure>
-                            <picture>
-                                <!-- il ia pe primul care se potriveste cu query-ul din media-->
-                                <source srcset="./src/images/1.jpg" media="(max-width:700px)" />
-                                <source srcset="./src/images/2.jpg" media="(max-width:1200px)" />
-                                <img src="./src/images/sigla.jpg" alt="text" />
-                            </picture>
-                            <figcaption>descriere imagine</figcaption>
-                        </figure>
+                        <picture>
+                            <!-- il ia pe primul care se potriveste cu query-ul din media-->
+                            <source srcset="./resurse/imagini/macarons-200x200.jpg" media="(max-width:700px)" />
+                            <source srcset="./resurse/imagini/macarons.jpg" media="(max-width:1200px)" />
+                            <img src="./resurse/imagini/macarons-640x360.jpg" alt="text" />
+                        </picture>
                     </div>
                 </div>
                 <hr class="prajituri" />
@@ -380,10 +436,22 @@
 
             </div>
         </section>
+
+
+
     </main>
-    <footer>
-        <p><small>Copyright &copy;2020 Ionel Popescu</small></p>
+    <footer id="subsol">
+        <a href="#" title="mergi sus" id="link-top">
+            <div id="triunghi"></div>
+        </a>
+        <address>
+            Strada prajiturilor, nr. 10, București, sector 1, România
+            E-mail: <a href="mailto:georgica@gmail.com">Georgica</a>
+            Telefon: <a href="+40721111111">tel</a>
+            1&lt;2&copy;
+        </address>
     </footer>
+
 </body>
 
 </html>
