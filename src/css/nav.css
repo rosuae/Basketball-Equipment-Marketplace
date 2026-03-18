@@ -1,7 +1,7 @@
 nav {
     --latime-buton: 120px;
     --inaltime-buton: 40px;
-    background-color: var(--culoare-contur);
+    background-color: var(--culoare-fundal);
     display: flex;
 }
 
@@ -25,30 +25,55 @@ ul.meniu, ul.meniu ul {
 
 ul.meniu {
     display: flex;
+    width: 100%;
 }
 
 ul.meniu ul {
     display: none;
     position: absolute;
+    top: 100%;
+    left: 0;
     z-index: 10;
 }
 
 ul.meniu li {
+    position: relative;
     cursor: pointer;
     font-weight: bold;
-    width: var(--latime-buton);
+    min-width: var(--latime-buton);
+    padding: 0 15px;
+    white-space: nowrap;
+    box-sizing: border-box;
     height: var(--inaltime-buton);
     background-color: var(--culoare-fundal);
     border: 1px solid var(--culoare-border);
     color: var(--culoare-text);
     text-align: center;
-    line-height: var(--inaltime-buton);
-    transition: background-color 0.3s ease, color 0.3s ease;
+    line-height: calc(var(--inaltime-buton) - 2px);
+    transition: background-color 0.1s ease, color 0.1s ease;
+}
+
+ul.meniu > li:last-child {
+    margin-left: auto;
+}
+
+ul.meniu li a {
+    transition: color 100ms ease;
 }
 
 ul.meniu > li:hover {
     background-color: var(--culoare-hover);
-    color: var(--culoare-fundal);
+    color: var(--culoare-contur);
+}
+
+ul.meniu ul li:hover {
+    background-color: var(--culoare-hover);
+    color: var(--culoare-border);
+    transition: background-color 0.1s ease, color 0.1s ease;
+}
+
+ul.meniu ul li:hover > a {
+    color: var(--culoare-border); 
 }
 
 ul.meniu li:hover > ul {
@@ -57,4 +82,42 @@ ul.meniu li:hover > ul {
 
 ul.meniu ul li {
     border-top: none;
+}
+
+@media screen and (max-width: 850px) {
+    nav {
+        flex-direction: column; 
+    }
+
+    #hamburger {
+        display: block;
+        cursor: pointer;
+        padding: 10px 20px;
+        background-color: var(--culoare-border);
+        color: var(--culoare-text);
+        font-weight: bold;
+        border-radius: 8px;
+        text-align: center;
+        width: fit-content;
+        margin: 0 auto 10px auto;
+    }
+
+    ul.meniu {
+        display: none; 
+        flex-direction: column;
+        width: 100%;
+    }
+
+    ul.meniu li {
+        width: 100%;
+    }
+
+    ul.meniu ul {
+        position: relative;
+        width: 100%;
+    }
+
+    #ch-menu:checked ~ ul.meniu {
+        display: flex;
+    }
 }

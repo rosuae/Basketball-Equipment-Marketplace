@@ -30,6 +30,12 @@
     <header>
         <h1>Iverson Era</h1>
         <nav>
+            <input type="checkbox" id="ch-menu">
+        
+            <label for="ch-menu" id="hamburger">
+                <i class="fa-solid fa-bars"></i> Meniu
+            </label>
+        
             <ul class="meniu">
                 <li>
                     <a href="#noutati" class="text-icon">Acasă</a>
@@ -123,7 +129,6 @@
                     <caption>Program Suport Clienți</caption>
                     <thead>
                         <tr>
-                            <th>Cod</th>
                             <th>Perioadă</th>
                             <th>Zi</th>
                             <th>Interval dimineata</th>
@@ -132,45 +137,38 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td></td>
                             <td rowspan="5">Zile<br />Lucrătoare</td>
                             <td>Luni</td>
                             <td>10-12</td>
                             <td>14-20</td>
                         </tr>
                         <tr>
-                            <td></td>
                             <td>Marti</td>
                             <td>9-12</td>
                             <td>14-21</td>
                         </tr>
                         <tr>
-                            <td></td>
                             <td>Miercuri</td>
                             <td>9-11</td>
                             <td>14-21</td>
                         </tr>
                         <tr>
-                            <td></td>
                             <td>Joi</td>
                             <td>9-11</td>
                             <td>14-21</td>
                         </tr>
                         <tr>
-                            <td></td>
                             <td>Vineri</td>
                             <td>9-12</td>
                             <td>14-19</td>
                         </tr>
                         <tr>
-                            <td></td>
                             <td rowspan="2">Weekend</td>
                             <td>Sambata</td>
                             <td>10-12</td>
                             <td>13-16</td>
                         </tr>
                         <tr>
-                            <td></td>
                             <td>Duminica</td>
                             <td>10-14</td>
                             <td>inchis</td>
@@ -178,7 +176,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="5">Suportul online este închis de sărbătorile legale. Comenzile pe
+                            <td colspan="4">Suportul online este închis de sărbătorile legale. Comenzile pe
                                 <b>magazin online</b> se procesează 24/7.
                             </td>
                         </tr>
@@ -392,7 +390,7 @@
                 </section>
                 <section id="harta-jucator">
                     <h2>Echipamentul în Acțiune</h2>
-                    <img src="./src/images/jucator.jpg" alt="Jucător de baschet în acțiune" usemap="#harta-echipament"
+                    <img src="./src/images/jucator.jpg" class="img-harta" alt="Jucător de baschet în acțiune" usemap="#harta-echipament"
                         width="426" height="640" style="display: block; margin: 0 auto; max-width: 100%; height: auto;">
 
                     <map name="harta-echipament">
@@ -500,8 +498,7 @@
                         <div class="taburi-iframe">
                             <a href="https://www.youtube.com/embed/5tWHwXdnTuM" target="ifr-video">Review Adidasi</a>
                             <a href="https://www.youtube.com/embed/EI7An8OCRJ8" target="ifr-video">Top Tricouri NBA</a>
-                            <a href="https://www.youtube.com/embed/0g_iCwd3e9Y" target="ifr-video">Evolutia NBA
-                                Streetwear</a><br />
+                            <a href="https://www.youtube.com/embed/0g_iCwd3e9Y" target="ifr-video">Evolutia NBA Streetwear</a>
                         </div>
                         <iframe width="560" height="315" src="https://www.youtube.com/embed/5tWHwXdnTuM"
                             name="ifr-video" title="YouTube video player"
@@ -514,8 +511,8 @@
         </div>
     </main>
     <footer id="subsol">
-        <a href="#noutati" title="mergi sus" id="link-top">
-            <div id="triunghi">↑</div>
+        <a href="#welcome" title="Întoarce-te la începutul paginii" id="link-top">
+            <div id="sageata">&#8593;</div>
         </a>
         <address>
             Adresa: <a href="https://maps.app.goo.gl/3dxxaRQ6sMj9tECo6" target="_blank">
