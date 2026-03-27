@@ -1,0 +1,138 @@
+@media print {
+    @page {
+        size: A4;
+        margin: 2cm;
+    }
+
+    @page :left {
+        margin-left: 2cm;
+        margin-right: 1cm;
+    }
+
+    @page :right {
+        margin-left: 1cm;
+        margin-right: 2cm;
+    }
+
+    * {
+        background: white !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+    }
+
+    body {
+        margin: 0;
+        color: black;
+    }
+
+    header {
+        break-after: page;
+    }
+
+    header h1 {
+        font-size: 2.5rem;
+        text-align: center;
+        height: 70vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0;
+        padding: 40px 20px;
+    }
+
+    header nav ul,
+    #main-nav .meniu {
+        list-style: disc;
+        margin: 20px 0 0 20px;
+        padding: 0;
+    }
+
+    header nav ul ul,
+    #main-nav .submenu {
+        list-style: circle;
+        margin: 5px 0 0 40px;
+    }
+
+    header nav a,
+    #main-nav a {
+        color: black;
+        text-decoration: none;
+    }
+
+    #main-nav input, #main-nav i, #hamburger, .menu-text {
+        display: none !important;
+    }
+
+    img, video, iframe, picture, figure, figcaption, #link-top, #sageata, #triunghi {
+        display: none !important;
+    }
+
+    #grid-pagina {
+        display: block;
+    }
+
+    footer {
+        break-before: page;
+        margin: 0;
+        padding: 20px;
+    }
+
+    a {
+        color: black;
+        text-decoration: none;
+    }
+
+    p.proiect-scolar {
+        position: fixed;
+        top: 1.5cm;
+        right: 1.5cm;
+        width: 50%;
+        border: 3px double black;
+        padding: 10px;
+        margin: 0;
+        text-align: center;
+        color: black;
+        z-index: 1000;
+    }
+
+    body::before {
+        content: "Andrei\AEduard Rosu";
+        white-space: pre;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 60%;
+        height: 10%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 48px;
+        font-weight: bold;
+        color: rgba(0, 0, 0, 0.3);
+        text-align: center;
+        line-height: 1;
+        z-index: -1;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        page-break-after: avoid;
+        margin: 15px 0;
+    }
+
+    p, ul, ol, blockquote {
+        page-break-inside: avoid;
+        margin: 10px 0;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        page-break-inside: avoid;
+    }
+
+    table td, table th {
+        border: 1px solid black;
+        padding: 8px;
+    }
+}

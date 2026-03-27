@@ -22,24 +22,56 @@
     <link href="https://fonts.googleapis.com/css2?family=Boldonse&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" />
     
+    <link rel="stylesheet" href="src/css/reset.css" />
     <link rel="stylesheet" href="src/css/general.css" />
     <link rel="stylesheet" href="src/css/nav.css" />
+    <link rel="stylesheet" href="src/css/print.css" media="print" />
 </head>
 
 <body>
     <header>
         <h1>Iverson Era</h1>
-        <nav>
-            <input type="checkbox" id="ch-menu">
-        
-            <label for="ch-menu" id="hamburger">
-                <i class="fa-solid fa-bars"></i> Meniu
+        <nav id="main-nav">
+            <input type="checkbox" id="ch-menu" />
+
+            <label for="ch-menu" id="hamburger" aria-label="Deschide meniul principal">
+                <i class="fa-solid fa-bars"></i>
+                <span class="menu-text">Meniu</span>
             </label>
-        
+
             <ul class="meniu">
                 <li>
-                    <a href="#noutati" class="text-icon">Acasă</a>
-                    <ul>
+                    <a href="index.html" class="menu-link">
+                        <i class="fa-solid fa-house menu-icon"></i>
+                        <span class="menu-text">Acasă</span>
+                    </a>
+                    <ul class="submenu">
+                        <li><a href="#welcome">Bun venit</a></li>
+                        <li><a href="#orar">Program</a></li>
+                        <li><a href="#calendar">Calendar</a></li>
+                        <li><a href="#anunturi">Anunțuri</a></li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="produse.html" class="menu-link">
+                        <i class="fa-solid fa-layer-group menu-icon"></i>
+                        <span class="menu-text">Produse</span>
+                    </a>
+                    <ul class="submenu">
+                        <li><a href="adidasi.html">Adidași</a></li>
+                        <li><a href="imbracaminte.html">Îmbrăcăminte</a></li>
+                        <li><a href="accesorii.html">Accesorii</a></li>
+                        <li><a href="marci.html">Mărci</a></li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="#noutati" class="menu-link">
+                        <i class="fa-solid fa-layer-group menu-icon"></i>
+                        <span class="menu-text">Noutăți</span>
+                    </a>
+                    <ul class="submenu">
                         <li><a href="#intro">Despre Noi</a></li>
                         <li><a href="#lansari">Lansări Noi</a></li>
                         <li><a href="#promotii">Promoții</a></li>
@@ -47,28 +79,18 @@
                         <li><a href="#index-intrebari">FAQ</a></li>
                     </ul>
                 </li>
-                <li><a href="adidasi.html" class="text-icon">Adidași</a>
-                    <ul>
-                        <li><a href="#colectie">Colecția noastră</a></li>
-                    </ul>
+
+                <li>
+                    <a href="oferte.html" class="menu-link">
+                        <i class="fa-solid fa-tags menu-icon"></i>
+                        <span class="menu-text">Oferte</span>
+                    </a>
                 </li>
-                <li><a href="imbracaminte.html" class="text-icon">Îmbrăcăminte</a>
-                    <ul>
-                        <li><a href="#colectie">Colecția noastră</a></li>
-                    </ul>
-                </li>
-                <li><a href="accesorii.html" class="text-icon">Accesorii</a>
-                    <ul>
-                        <li><a href="#accesorii">Accesorii sport</a></li>
-                    </ul>
-                </li>
-                <li><a href="marci.html" class="text-icon">Mărci</a>
-                    <ul>
-                        <li><a href="#marci">Mărcile vândute</a></li>
-                    </ul>
-                </li>
-                <li><a href="cos.html" class="text-icon">
-                        <i class="fa-solid fa-basket-shopping"></i> Coș
+
+                <li class="menu-right">
+                    <a href="cos.html" class="menu-link">
+                        <i class="fa-solid fa-basket-shopping menu-icon"></i>
+                        <span class="menu-text">Coș</span>
                     </a>
                 </li>
             </ul>
@@ -531,6 +553,7 @@
         <small>
             &copy; Iverson Era. Pagină creată pe <time datetime="2026-03-01">1 Martie 2026</time>.
         </small>
+        <p class="proiect-scolar">Acesta este un proiect școlar!</p>
     </footer>
 </body>
 

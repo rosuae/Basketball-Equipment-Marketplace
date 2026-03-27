@@ -1,123 +1,280 @@
-nav {
-    --latime-buton: 120px;
-    --inaltime-buton: 40px;
-    background-color: var(--culoare-fundal);
-    display: flex;
-}
-
-ul.meniu, ul.meniu ul {
-    list-style-type: none;
-    padding: 0;
+#main-nav .meniu > ul,
+#main-nav .meniu,
+#main-nav .meniu ul {
+    list-style: none;
     margin: 0;
+    padding: 0;
 }
 
-#hamburger, #ch-menu {
-    display: none;
-}
-
-.text-icon, .imag-icon {
-    display: inline-block;
-    text-decoration: none;
-    color: inherit;
-    width: 100%;
-    height: 100%;
-}
-
-ul.meniu {
+#main-nav .meniu > li > ul li > a,
+#main-nav .meniu > li > .menu-link {
     display: flex;
+    align-items: center;
     width: 100%;
-}
-
-ul.meniu ul {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    z-index: 10;
-}
-
-ul.meniu li {
-    position: relative;
-    cursor: pointer;
-    font-weight: bold;
-    min-width: var(--latime-buton);
-    padding: 0 15px;
-    white-space: nowrap;
     box-sizing: border-box;
-    height: var(--inaltime-buton);
-    background-color: var(--culoare-fundal);
-    border: 1px solid var(--culoare-border);
-    color: var(--culoare-text);
-    text-align: center;
-    line-height: calc(var(--inaltime-buton) - 2px);
-    transition: background-color 0.1s ease, color 0.1s ease;
 }
 
-ul.meniu > li:last-child {
+@keyframes submenu-open {
+    from {
+        opacity: 0;
+        transform: scale(0, 0);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1, 1);
+    }
+}
+
+@keyframes burger-arrow-reveal {
+    0% {
+        clip-path: polygon(0 45%, 8% 45%, 12% 50%, 8% 55%, 0 55%);
+        -webkit-clip-path: polygon(0 45%, 8% 45%, 12% 50%, 8% 55%, 0 55%);
+    }
+
+    75% {
+        clip-path: polygon(0 0, 105% 0, 113% 50%, 105% 100%, 0 100%);
+        -webkit-clip-path: polygon(0 0, 105% 0, 113% 50%, 105% 100%, 0 100%);
+    }
+
+    88% {
+        clip-path: polygon(0 0, 102% 0, 105% 50%, 102% 100%, 0 100%);
+        -webkit-clip-path: polygon(0 0, 102% 0, 105% 50%, 102% 100%, 0 100%);
+    }
+
+    100% {
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+        -webkit-clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    }
+}
+
+#main-nav {
+    --nav-bg: var(--culoare-fundal);
+    --nav-text: var(--culoare-text);
+    --nav-accent: var(--culoare-contur);
+    --nav-border: var(--culoare-border);
+    --nav-hover: var(--culoare-hover);
+}
+
+#main-nav #hamburger,
+#main-nav #ch-menu {
+    display: none;
+}
+
+#main-nav .meniu {
+    display: flex;
+}
+
+#main-nav .meniu > li {
+    position: relative;
+    width: 10rem;
+    height: 2.9rem;
+    border: 0.0625rem solid var(--nav-border);
+    background: var(--nav-bg);
+}
+
+#main-nav .meniu > li.menu-right {
     margin-left: auto;
 }
 
-ul.meniu li a {
-    transition: color 100ms ease;
+#main-nav .meniu > li > .menu-link {
+    justify-content: center;
+    gap: 0.45rem;
+    height: 100%;
+    color: var(--nav-text);
+    font-weight: 700;
+    overflow: hidden;
+    position: relative;
+    transition: color 0.25s linear;
 }
 
-ul.meniu > li:hover {
-    background-color: var(--culoare-hover);
-    color: var(--culoare-contur);
+#main-nav .meniu > li > .menu-link::before {
+    content: "";
+    position: absolute;
+    inset: 0.22rem;
+    border-radius: 0.6rem;
+    background: color-mix(in srgb, var(--nav-accent), transparent 65%);
+    transform: scale(0);
+    transition: transform 0.4s ease;
+    z-index: 0;
 }
 
-ul.meniu ul li:hover {
-    background-color: var(--culoare-hover);
-    color: var(--culoare-border);
-    transition: background-color 0.1s ease, color 0.1s ease;
+#main-nav .meniu > li > .menu-link .menu-icon,
+#main-nav .meniu > li > .menu-link .menu-text {
+    position: relative;
+    z-index: 1;
 }
 
-ul.meniu ul li:hover > a {
-    color: var(--culoare-border); 
+#main-nav .meniu > li:hover > .menu-link,
+#main-nav .meniu > li:focus-within > .menu-link {
+    color: var(--nav-accent);
 }
 
-ul.meniu li:hover > ul {
-    display: block;
+#main-nav .meniu > li:hover > .menu-link::before,
+#main-nav .meniu > li:focus-within > .menu-link::before {
+    transform: scale(1);
 }
 
-ul.meniu ul li {
-    border-top: none;
+#main-nav .meniu > li > ul {
+    position: absolute;
+    top: 0;
+    left: 0;
+    min-width: 13rem;
+    transform: translateY(2.9rem) scale(0);
+    transform-origin: top left;
+    opacity: 0;
+    visibility: hidden;
+    border: 0.0625rem solid var(--nav-border);
+    box-shadow: 0 0.35rem 0.9rem rgba(0, 0, 0, 0.35);
+    transition: transform 0.4s ease, opacity 0.4s ease;
+    z-index: 20;
 }
 
-@media screen and (max-width: 850px) {
-    nav {
-        flex-direction: column; 
+#main-nav .meniu > li > ul li {
+    animation: submenu-open 0.4s linear both;
+}
+
+#main-nav .meniu > li > ul li:nth-child(1) {
+    animation-delay: 0.04s;
+}
+
+#main-nav .meniu > li > ul li:nth-child(2) {
+    animation-delay: 0.08s;
+}
+
+#main-nav .meniu > li > ul li:nth-child(3) {
+    animation-delay: 0.12s;
+}
+
+#main-nav .meniu > li > ul li:nth-child(4) {
+    animation-delay: 0.16s;
+}
+
+#main-nav .meniu > li > ul li:nth-child(5) {
+    animation-delay: 0.2s;
+}
+
+#main-nav .meniu > li > ul li:nth-child(6) {
+    animation-delay: 0.24s;
+}
+
+#main-nav .meniu > li > ul li:nth-child(7) {
+    animation-delay: 0.28s;
+}
+
+#main-nav .meniu > li > ul li:nth-child(8) {
+    animation-delay: 0.32s;
+}
+
+#main-nav .meniu > li > ul li > a {
+    justify-content: flex-start;
+    min-height: 2.4rem;
+    padding: 0.55rem 0.8rem;
+    color: var(--nav-text);
+    background: var(--nav-bg);
+    transition: background-color 0.25s linear, color 0.25s linear, text-shadow 0.25s linear;
+}
+
+#main-nav .meniu > li > ul li > a:hover,
+#main-nav .meniu > li > ul li > a:focus-visible {
+    color: var(--nav-accent);
+    background: var(--nav-hover);
+    text-shadow: 0 0 0.06rem currentColor, 0 0 0.24rem currentColor;
+}
+
+#main-nav .meniu > li:hover > ul,
+#main-nav .meniu > li:focus-within > ul {
+    transform: translateY(2.9rem) scale(1);
+    opacity: 1;
+    visibility: visible;
+}
+
+@media (max-width: 1000px) {
+    #main-nav .meniu > li {
+        width: 4.1rem;
     }
 
-    #hamburger {
-        display: block;
-        cursor: pointer;
-        padding: 10px 20px;
-        background-color: var(--culoare-border);
-        color: var(--culoare-text);
-        font-weight: bold;
-        border-radius: 8px;
-        text-align: center;
+    #main-nav .meniu > li > .menu-link .menu-text {
+        display: none;
+    }
+}
+
+@media (max-width: 760px) {
+    #main-nav #hamburger {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
         width: fit-content;
-        margin: 0 auto 10px auto;
+        margin: 0 0 0.8rem 0;
+        padding: 0.6rem 0.9rem;
+        border: 0.0625rem solid var(--nav-border);
+        border-radius: 0.6rem;
+        background: var(--nav-bg);
+        color: var(--nav-text);
+        font-weight: 700;
+        cursor: pointer;
     }
 
-    ul.meniu {
-        display: none; 
+    #main-nav .meniu {
+        display: none;
         flex-direction: column;
         width: 100%;
+        overflow: hidden;
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+        -webkit-clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
     }
 
-    ul.meniu li {
+    #main-nav .meniu > li {
         width: 100%;
+        height: auto;
+        min-height: 2.9rem;
     }
 
-    ul.meniu ul {
-        position: relative;
+    #main-nav .meniu > li.menu-right {
+        margin-left: 0;
+    }
+
+    #main-nav .meniu > li > .menu-link {
+        justify-content: flex-start;
+        padding-inline: 0.85rem;
+        min-height: 2.9rem;
+    }
+
+    #main-nav .meniu > li > .menu-link .menu-text {
+        display: inline;
+    }
+
+    #main-nav .meniu > li:first-child > .menu-link .menu-text {
+        display: none;
+    }
+
+    #main-nav .meniu > li > ul {
+        position: static;
+        min-width: 0;
         width: 100%;
+        transform: none;
+        opacity: 1;
+        visibility: visible;
+        max-height: 0;
+        overflow: hidden;
+        clip-path: none;
+        transition: max-height 0.4s ease;
     }
 
-    #ch-menu:checked ~ ul.meniu {
+    #main-nav .meniu > li > ul li > a {
+        padding-left: 1.8rem;
+    }
+
+    #main-nav .meniu > li:hover > ul,
+    #main-nav .meniu > li:focus-within > ul {
+        transform: none;
+        opacity: 1;
+        visibility: visible;
+        max-height: 24rem;
+    }
+
+    #main-nav #ch-menu:checked ~ .meniu {
         display: flex;
+        animation: burger-arrow-reveal 1.5s ease both;
     }
 }

@@ -1,0 +1,276 @@
+$bp-medium: 1000px;
+$bp-small: 760px;
+
+$btn-width: 10rem;
+$btn-height: 2.9rem;
+$submenu-width: 13rem;
+$radius: 0.6rem;
+
+$t-fast: 0.25s;
+$t-med: 0.4s;
+$t-arrow: 1.5s;
+
+%menu-reset {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+%menu-link-shared {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+@keyframes submenu-open {
+    from {
+        opacity: 0;
+        transform: scale(0, 0);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1, 1);
+    }
+}
+
+@keyframes burger-arrow-reveal {
+    0% {
+        clip-path: polygon(0 45%, 8% 45%, 12% 50%, 8% 55%, 0 55%);
+        -webkit-clip-path: polygon(0 45%, 8% 45%, 12% 50%, 8% 55%, 0 55%);
+    }
+
+    75% {
+        clip-path: polygon(0 0, 105% 0, 113% 50%, 105% 100%, 0 100%);
+        -webkit-clip-path: polygon(0 0, 105% 0, 113% 50%, 105% 100%, 0 100%);
+    }
+
+    88% {
+        clip-path: polygon(0 0, 102% 0, 105% 50%, 102% 100%, 0 100%);
+        -webkit-clip-path: polygon(0 0, 102% 0, 105% 50%, 102% 100%, 0 100%);
+    }
+
+    100% {
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+        -webkit-clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    }
+}
+
+#main-nav {
+    --nav-bg: var(--culoare-fundal);
+    --nav-text: var(--culoare-text);
+    --nav-accent: var(--culoare-contur);
+    --nav-border: var(--culoare-border);
+    --nav-hover: var(--culoare-hover);
+
+    #hamburger,
+    #ch-menu {
+        display: none;
+    }
+
+    .meniu,
+    .meniu ul {
+        @extend %menu-reset;
+    }
+
+    .meniu {
+        display: flex;
+
+        > li {
+            position: relative;
+            width: $btn-width;
+            height: $btn-height;
+            border: 0.0625rem solid var(--nav-border);
+            background: var(--nav-bg);
+
+            &.menu-right {
+                margin-left: auto;
+            }
+
+            > .menu-link {
+                @extend %menu-link-shared;
+                justify-content: center;
+                gap: 0.45rem;
+                height: 100%;
+                color: var(--nav-text);
+                font-weight: 700;
+                overflow: hidden;
+                position: relative;
+                transition: color $t-fast linear;
+
+                &::before {
+                    content: "";
+                    position: absolute;
+                    inset: 0.22rem;
+                    border-radius: $radius;
+                    background: color-mix(in srgb, var(--nav-accent), transparent 65%);
+                    transform: scale(0);
+                    transition: transform $t-med ease;
+                    z-index: 0;
+                }
+
+                .menu-icon,
+                .menu-text {
+                    position: relative;
+                    z-index: 1;
+                }
+            }
+
+            &:hover > .menu-link,
+            &:focus-within > .menu-link {
+                color: var(--nav-accent);
+
+                &::before {
+                    transform: scale(1);
+                }
+            }
+
+            > ul {
+                @extend %menu-reset;
+                position: absolute;
+                top: 0;
+                left: 0;
+                min-width: $submenu-width;
+                transform: translateY($btn-height) scale(0);
+                transform-origin: top left;
+                opacity: 0;
+                visibility: hidden;
+                border: 0.0625rem solid var(--nav-border);
+                box-shadow: 0 0.35rem 0.9rem rgba(0, 0, 0, 0.35);
+                transition: transform $t-med ease, opacity $t-med ease;
+                z-index: 20;
+
+                li {
+                    animation: submenu-open $t-med linear both;
+
+                    @for $i from 1 through 8 {
+                        &:nth-child(#{$i}) {
+                            animation-delay: $i * 0.04s;
+                        }
+                    }
+
+                    > a {
+                        @extend %menu-link-shared;
+                        justify-content: flex-start;
+                        min-height: 2.4rem;
+                        padding: 0.55rem 0.8rem;
+                        color: var(--nav-text);
+                        background: var(--nav-bg);
+                        transition: background-color $t-fast linear, color $t-fast linear, text-shadow $t-fast linear;
+
+                        &:hover,
+                        &:focus-visible {
+                            color: var(--nav-accent);
+                            background: var(--nav-hover);
+                            text-shadow: 0 0 0.06rem currentColor, 0 0 0.24rem currentColor;
+                        }
+                    }
+                }
+            }
+
+            &:hover > ul,
+            &:focus-within > ul {
+                transform: translateY($btn-height) scale(1);
+                opacity: 1;
+                visibility: visible;
+            }
+        }
+    }
+}
+
+@media (max-width: $bp-medium) {
+    #main-nav {
+        .meniu > li {
+            width: 4.1rem;
+
+            > .menu-link {
+                .menu-text {
+                    display: none;
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: $bp-small) {
+    #main-nav {
+        #hamburger {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            width: fit-content;
+            margin: 0 0 0.8rem 0;
+            padding: 0.6rem 0.9rem;
+            border: 0.0625rem solid var(--nav-border);
+            border-radius: $radius;
+            background: var(--nav-bg);
+            color: var(--nav-text);
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .meniu {
+            display: none;
+            flex-direction: column;
+            width: 100%;
+            overflow: hidden;
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+            -webkit-clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+
+            > li {
+                width: 100%;
+                height: auto;
+                min-height: $btn-height;
+
+                &.menu-right {
+                    margin-left: 0;
+                }
+
+                > .menu-link {
+                    justify-content: flex-start;
+                    padding-inline: 0.85rem;
+                    min-height: $btn-height;
+
+                    .menu-text {
+                        display: inline;
+                    }
+                }
+
+                &:first-child > .menu-link .menu-text {
+                    display: none;
+                }
+
+                > ul {
+                    position: static;
+                    min-width: 0;
+                    width: 100%;
+                    transform: none;
+                    opacity: 1;
+                    visibility: visible;
+                    max-height: 0;
+                    overflow: hidden;
+                    clip-path: none;
+                    transition: max-height $t-med ease;
+
+                    li > a {
+                        padding-left: 1.8rem;
+                    }
+                }
+
+                &:hover > ul,
+                &:focus-within > ul {
+                    transform: none;
+                    opacity: 1;
+                    visibility: visible;
+                    max-height: 24rem;
+                }
+            }
+        }
+
+        #ch-menu:checked ~ .meniu {
+            display: flex;
+            animation: burger-arrow-reveal $t-arrow ease both;
+        }
+    }
+}
