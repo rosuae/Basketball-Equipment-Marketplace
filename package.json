@@ -1,0 +1,48 @@
+{
+  "name": "basketball-equipment-marketplace",
+  "version": "1.0.0",
+  "description": "Magazin de echipament pentru baschet",
+  "keywords": [
+    "NBA",
+    "tricou",
+    "baschet",
+    "sneakers",
+    "streetwear",
+    "magazin",
+    "online",
+    "adidasi",
+    "imbracaminte",
+    "echipament",
+    "sportiv",
+    "oferte",
+    "streetwear",
+    "haine",
+    "baschet",
+    "accesorii",
+    "sport",
+    "comunitate",
+    "pasionati",
+    "baschet",
+    "Allen",
+    "Iverson"
+  ],
+  "homepage": "https://github.com/rosuae/Basketball-Equipment-Marketplace#readme",
+  "bugs": {
+    "url": "https://github.com/rosuae/Basketball-Equipment-Marketplace/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rosuae/Basketball-Equipment-Marketplace.git"
+  },
+  "license": "ISC",
+  "author": "Andrei Eduard Rosu",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "ejs": "^5.0.1",
+    "express": "^5.2.1"
+  }
+}

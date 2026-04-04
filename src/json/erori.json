@@ -1,0 +1,38 @@
+{
+  "cale_baza": "/src/images/erori",
+  "eroare_default": {
+    "titlu": "Eroare",
+    "text": "A aparut o eroare neasteptata.",
+    "imagine": "default.jpg"
+  },
+  "info_erori": [
+    {
+      "identificator": 400,
+      "status": true,
+      "titlu": "Cerere invalida",
+      "text": "Nu este permis accesul direct la fisiere template .ejs.",
+      "imagine": "400.jpg"
+    },
+    {
+      "identificator": 403,
+      "status": true,
+      "titlu": "Acces interzis",
+      "text": "Nu aveti permisiunea de a accesa direct acest director de resurse.",
+      "imagine": "403.jpg"
+    },
+    {
+      "identificator": 404,
+      "status": true,
+      "titlu": "Pagina nu a fost gasita",
+      "text": "Pagina ceruta nu exista.",
+      "imagine": "404.jpg"
+    },
+    {
+      "identificator": 500,
+      "status": true,
+      "titlu": "Eroare interna",
+      "text": "A aparut o eroare interna pe server.",
+      "imagine": "500.jpg"
+    }
+  ]
+}
