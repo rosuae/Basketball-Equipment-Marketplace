@@ -73,6 +73,29 @@ object {
     border: none;
 }
 
+#video-vtt {
+    display: grid;
+    gap: 12px;
+}
+
+.video-vtt-player {
+    width: 85%;
+    min-width: 260px;
+    max-width: 920px;
+    height: auto;
+    margin: 0 auto;
+}
+
+.video-vtt-player::cue {
+    color: #ffffff;
+    background: rgba(0, 0, 0, 0.85);
+    font-weight: 400;
+}
+
+.video-vtt-player::cue(b) {
+    font-weight: 700;
+}
+
 #grid-galerie img {
     max-width: 300px;
     min-width: 100px;
@@ -411,6 +434,11 @@ math:hover mi {
     object {
         max-width: 600px;
     }
+
+    .video-vtt-player {
+        width: 92%;
+        max-width: 760px;
+    }
 }
 
 @media screen and (max-width: 700px) {
@@ -460,6 +488,12 @@ math:hover mi {
     object {
         max-width: 100%;
         min-width: 150px;
+    }
+
+    .video-vtt-player {
+        width: 100%;
+        min-width: 220px;
+        max-width: 100%;
     }
 
     .container-iframe {

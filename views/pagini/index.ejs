@@ -12,6 +12,37 @@
         <p>Pagina este randata cu EJS, iar head, header si footer sunt incluse din fragmente reutilizabile.</p>
       </section>
 
+      <section id="video-vtt">
+        <h2>Review Video: Nike Ja 3</h2>
+        <p>Clipul are subtitrari in romana si engleza. Subtitrarea in romana este implicita.</p>
+
+        <video
+          class="video-vtt-player"
+          controls
+          preload="auto"
+          poster="/src/images/jersey.jpg"
+        >
+          <source src="/src/videos/ja3-review.mp4" type="video/mp4" />
+          <source src="/src/videos/ja3-review.wmv" type="video/x-ms-wmv" />
+
+          <track
+            src="/src/videos/subtritari/ja3-review-ro.vtt"
+            kind="subtitles"
+            srclang="ro"
+            label="Romana"
+            default
+          />
+          <track
+            src="/src/videos/subtritari/ja3-review-en.vtt"
+            kind="subtitles"
+            srclang="en"
+            label="English"
+          />
+
+          Browserul tau nu suporta redarea video HTML5.
+        </video>
+      </section>
+
       <%- include('../fragmente/date-utilizator') %>
     </main>
 
