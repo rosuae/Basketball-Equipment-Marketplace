@@ -9,6 +9,7 @@ body {
     --culoare-text: white;
     --culoare-hover: #1C1C1C;
     --culoare-border: #D21033;
+    --culoare-link-vizitat: #D21033;
 
     --margine-pagina: 120px;
     --spatiere-grid: 25px;
@@ -159,6 +160,44 @@ a {
     color: var(--culoare-contur);
     text-decoration: none;
     transition: color 0.3s ease;
+}
+
+a:visited {
+    color: var(--culoare-link-vizitat);
+}
+
+main a {
+    display: inline-block;
+    padding: 0.1em 0.45em;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+    background-image: radial-gradient(ellipse at center, var(--culoare-hover) 0%, var(--culoare-hover) 40%, transparent 80%, transparent 100%);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 0% 0%;
+    transition: background-size 0.35s ease;
+}
+
+main a:hover,
+main a:focus-visible {
+    background-size: 100% 100%;
+}
+
+main a:active {
+    transform: translate(2px, 2px);
+    outline: 2px solid white;
+}
+
+a[href^="http"]::before {
+    content: "⮳";
+    font-size: 1.5em;
+    margin-right: 0.2em;
+    color: var(--culoare-contur);
+    transition: color 0.3s ease;
+}
+
+a[href^="http"]:hover::before {
+    color: var(--culoare-border);
 }
 
 .zona1 {
