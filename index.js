@@ -18,7 +18,8 @@ vect_foldere.forEach((numeFolder) => {
 });
 
 function initErori() {
-  const continut = fs.readFileSync(path.join(__dirname, 'src/json/erori.json'), 'utf-8');
+  const caleEroriJson = path.join(__dirname, 'src/json/erori.json');
+  const continut = fs.readFileSync(caleEroriJson, 'utf-8');
   const obErori = JSON.parse(continut);
 
   obErori.eroare_default.imagine = path.posix.join(
@@ -33,6 +34,278 @@ function initErori() {
   obGlobal.obErori = obErori;
 }
 
+function verificaProprietatiDuplicateInJsonString(jsonText, caleFisier) {
+  try {
+    function extrageBloc(text, startIndex, openChar, closeChar) {
+      if (startIndex < 0 || text[startIndex] !== openChar) {
+        return null;
+      }
+
+      let depth = 0;
+      let inString = false;
+      let escaped = false;
+
+      for (let i = startIndex; i < text.length; i += 1) {
+        const ch = text[i];
+
+        if (inString) {
+          if (escaped) {
+            escaped = false;
+          } else if (ch === '\\') {
+            escaped = true;
+          } else if (ch === '"') {
+            inString = false;
+          }
+          continue;
+        }
+
+        if (ch === '"') {
+          inString = true;
+          continue;
+        }
+
+        if (ch === openChar) {
+          depth += 1;
+        } else if (ch === closeChar) {
+          depth -= 1;
+          if (depth === 0) {
+            return text.slice(startIndex, i + 1);
+          }
+        }
+      }
+
+      return null;
+    }
+
+    function extrageCheiTopNivel(obiectText) {
+      const chei = [];
+      let i = 0;
+      let depth = 0;
+
+      while (i < obiectText.length) {
+        const ch = obiectText[i];
+
+        if (ch === '"') {
+          let j = i + 1;
+          while (j < obiectText.length) {
+            if (obiectText[j] === '\\') {
+              j += 2;
+              continue;
+            }
+            if (obiectText[j] === '"') {
+              break;
+            }
+            j += 1;
+          }
+
+          if (depth === 1) {
+            let k = j + 1;
+            while (k < obiectText.length && /\s/.test(obiectText[k])) {
+              k += 1;
+            }
+            if (obiectText[k] === ':') {
+              chei.push(obiectText.slice(i + 1, j));
+            }
+          }
+
+          i = j + 1;
+          continue;
+        }
+
+        if (ch === '{' || ch === '[') {
+          depth += 1;
+        } else if (ch === '}' || ch === ']') {
+          depth -= 1;
+        }
+
+        i += 1;
+      }
+
+      return chei;
+    }
+
+    function verificaDuplicate(chei, eticheta) {
+      const frecvente = {};
+      for (const cheie of chei) {
+        frecvente[cheie] = (frecvente[cheie] || 0) + 1;
+      }
+
+      const duplicate = Object.keys(frecvente).filter((cheie) => frecvente[cheie] > 1);
+      if (duplicate.length > 0) {
+        throw new Error(`Proprietate duplicata in ${eticheta}: ${duplicate.join(', ')}.`);
+      }
+    }
+
+    verificaDuplicate(extrageCheiTopNivel(jsonText), 'radacina');
+
+    const matchEroareDefault = jsonText.match(/"eroare_default"\s*:/);
+    if (matchEroareDefault) {
+      const startDefault = jsonText.indexOf('{', matchEroareDefault.index);
+      const blocDefault = extrageBloc(jsonText, startDefault, '{', '}');
+      if (blocDefault) {
+        verificaDuplicate(extrageCheiTopNivel(blocDefault), 'eroare_default');
+      }
+    }
+
+    const matchInfoErori = jsonText.match(/"info_erori"\s*:/);
+    if (matchInfoErori) {
+      const startInfoErori = jsonText.indexOf('[', matchInfoErori.index);
+      const blocInfoErori = extrageBloc(jsonText, startInfoErori, '[', ']');
+
+      if (blocInfoErori) {
+        let cursor = 0;
+        let indexEroare = 0;
+
+        while (cursor < blocInfoErori.length) {
+          if (blocInfoErori[cursor] === '{') {
+            const blocEroare = extrageBloc(blocInfoErori, cursor, '{', '}');
+            if (blocEroare) {
+              verificaDuplicate(extrageCheiTopNivel(blocEroare), `info_erori[${indexEroare}]`);
+              cursor += blocEroare.length;
+              indexEroare += 1;
+              continue;
+            }
+          }
+          cursor += 1;
+        }
+      }
+    }
+  } catch (error) {
+    console.error(
+      `[Eroare initializare] JSON invalid in ${caleFisier}. ${error.message}`
+    );
+    process.exit(1);
+  }
+}
+
+function verificaFisierEroriLaPornire() {
+  const caleEroriJson = path.join(__dirname, 'src/json/erori.json');
+
+  if (!fs.existsSync(caleEroriJson)) {
+    console.error(
+      '[Eroare initializare] Fisierul obligatoriu de configurare a erorilor lipseste: src/json/erori.json. Verifica daca fisierul exista, numele este corect si calea nu a fost modificata.'
+    );
+    process.exit(1);
+  }
+
+  const continut = fs.readFileSync(caleEroriJson, 'utf-8');
+  verificaProprietatiDuplicateInJsonString(continut, 'src/json/erori.json');
+  const obErori = JSON.parse(continut);
+  const proprietatiObligatorii = ['info_erori', 'cale_baza', 'eroare_default'];
+  const proprietatiLipsa = proprietatiObligatorii.filter(
+    (proprietate) => !Object.prototype.hasOwnProperty.call(obErori, proprietate)
+  );
+
+  if (proprietatiLipsa.length > 0) {
+    console.error(
+      `[Eroare initializare] Structura invalida in src/json/erori.json. Lipsesc proprietatile obligatorii: ${proprietatiLipsa.join(', ')}. Completeaza fisierul cu toate cheile cerute: info_erori, cale_baza, eroare_default.`
+    );
+    process.exit(1);
+  }
+
+  const proprietatiDefaultObligatorii = ['titlu', 'text', 'imagine'];
+  const proprietatiDefaultLipsa = proprietatiDefaultObligatorii.filter(
+    (proprietate) => !Object.prototype.hasOwnProperty.call(obErori.eroare_default, proprietate)
+  );
+
+  if (proprietatiDefaultLipsa.length > 0) {
+    console.error(
+      `[Eroare initializare] Structura invalida pentru eroarea default in src/json/erori.json. Lipsesc proprietatile obligatorii: ${proprietatiDefaultLipsa.join(', ')}. Completeaza campul eroare_default cu cheile: titlu, text, imagine.`
+    );
+    process.exit(1);
+  }
+
+  const caleBazaRelativa = String(obErori.cale_baza).replace(/^[/\\]+/, '');
+  const caleBazaAbsoluta = path.join(__dirname, caleBazaRelativa);
+
+  if (!fs.existsSync(caleBazaAbsoluta) || !fs.statSync(caleBazaAbsoluta).isDirectory()) {
+    console.error(
+      `[Eroare initializare] Folderul indicat in "cale_baza" nu exista in sistemul de fisiere: ${obErori.cale_baza}. Calea verificata pe disc este: ${caleBazaAbsoluta}. Creeaza folderul sau corecteaza valoarea din erori.json.`
+    );
+    process.exit(1);
+  }
+
+  const imaginiErori = [
+    { sursa: 'eroare_default.imagine', fisier: obErori.eroare_default.imagine },
+    ...obErori.info_erori.map((eroare, index) => ({
+      sursa: `info_erori[${index}].imagine`,
+      fisier: eroare.imagine,
+    })),
+  ];
+
+  const imaginiLipsa = imaginiErori.filter(({ fisier }) => {
+    const caleImagine = path.join(caleBazaAbsoluta, String(fisier));
+    return !fs.existsSync(caleImagine) || !fs.statSync(caleImagine).isFile();
+  });
+
+  if (imaginiLipsa.length > 0) {
+    const detaliiImaginiLipsa = imaginiLipsa
+      .map(({ sursa, fisier }) => `${sursa} -> ${fisier}`)
+      .join('; ');
+
+    console.error(
+      `[Eroare initializare] Unele imagini asociate erorilor nu exista in sistemul de fisiere. Verifica fisierele indicate in src/json/erori.json: ${detaliiImaginiLipsa}. Folder verificat: ${caleBazaAbsoluta}.`
+    );
+    process.exit(1);
+  }
+
+  const imaginiDuplicate = imaginiErori.reduce((acc, { fisier }) => {
+    const numeFisier = String(fisier);
+    acc[numeFisier] = (acc[numeFisier] || 0) + 1;
+    return acc;
+  }, {});
+  const fisiereDuplicate = Object.keys(imaginiDuplicate).filter(
+    (numeFisier) => imaginiDuplicate[numeFisier] > 1
+  );
+
+  if (fisiereDuplicate.length > 0) {
+    console.error(
+      `[Eroare initializare] Configuratie invalida in src/json/erori.json. Fiecare eroare trebuie sa aiba o imagine diferita, dar urmatoarele fisiere sunt folosite de mai multe erori: ${fisiereDuplicate.join(', ')}.`
+    );
+    process.exit(1);
+  }
+
+  const mapIdentificatori = new Map();
+
+  obErori.info_erori.forEach((eroare, index) => {
+    const id = eroare.identificator;
+    if (!mapIdentificatori.has(id)) {
+      mapIdentificatori.set(id, []);
+    }
+
+    const { identificator: _identificatorOmis, ...proprietatiFaraIdentificator } = eroare;
+    mapIdentificatori.get(id).push({
+      index,
+      proprietati: proprietatiFaraIdentificator,
+    });
+  });
+
+  const grupuriIdentificatoriDuplicati = Array.from(mapIdentificatori.entries()).filter(
+    ([, aparitii]) => aparitii.length > 1
+  );
+
+  if (grupuriIdentificatoriDuplicati.length > 0) {
+    const detaliiDuplicate = grupuriIdentificatoriDuplicati
+      .map(([id, aparitii]) => {
+        const detaliiAparitii = aparitii
+          .map(
+            ({ index, proprietati }) =>
+              `info_erori[${index}] -> ${JSON.stringify(proprietati)}`
+          )
+          .join('; ');
+
+        return `identificator ${JSON.stringify(id)}: ${detaliiAparitii}`;
+      })
+      .join(' | ');
+
+    console.error(
+      `[Eroare initializare] Configuratie invalida in src/json/erori.json. Exista mai multe erori in vectorul info_erori cu acelasi identificator. Pentru fiecare identificator duplicat, sunt listate toate proprietatile obiectelor (fara identificator): ${detaliiDuplicate}.`
+    );
+    process.exit(1);
+  }
+}
+
+verificaFisierEroriLaPornire();
 initErori();
 
 server.set('view engine', 'ejs');
