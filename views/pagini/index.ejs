@@ -327,16 +327,16 @@
                         width="426" height="640" style="display: block; margin: 0 auto; max-width: 100%; height: auto;">
 
                     <map name="harta-echipament">
-                        <area shape="circle" coords="298,339,65" href="accesorii.html" alt="Minge și accesorii"
+                        <area shape="circle" coords="298,339,65" href="/accesorii" alt="Minge și accesorii"
                             title="Vezi colecția de Accesorii sport">
 
-                        <area shape="rect" coords="110,140,310,490" href="imbracaminte.html" alt="Îmbrăcăminte Baschet"
+                        <area shape="rect" coords="110,140,310,490" href="/imbracaminte" alt="Îmbrăcăminte Baschet"
                             title="Vezi colecția de Îmbrăcăminte">
 
-                        <area shape="rect" coords="200,470,270,550" href="adidasi.html" alt="Adidași stângul"
+                        <area shape="rect" coords="200,470,270,550" href="/adidasi" alt="Adidași stângul"
                             title="Vezi colecția de Adidași">
 
-                        <area shape="rect" coords="280,540,360,620" href="adidasi.html" alt="Adidași dreptul"
+                        <area shape="rect" coords="280,540,360,620" href="/adidasi" alt="Adidași dreptul"
                             title="Vezi colecția de Adidași">
                     </map>
                 </section>
@@ -442,6 +442,14 @@
                 </section>
             </div>
         </div>
+
+        <section id="galerie-home">
+            <h2>Galerie Statica</h2>
+            <%- include('../fragmente/galerie-statica', {
+                galerieStatica: typeof galerieStatica !== 'undefined' ? galerieStatica : [],
+                intervalGalerie: typeof intervalGalerie !== 'undefined' ? intervalGalerie : 'zi'
+            }) %>
+        </section>
 
         <section id="video-vtt">
           <h2>Review Video: Nike Ja 3</h2>

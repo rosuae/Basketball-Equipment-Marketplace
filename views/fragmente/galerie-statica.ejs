@@ -1,0 +1,25 @@
+<section class="galerie-statica-wrap">
+  <h3>Galerie statica pentru intervalul <%= intervalGalerie %></h3>
+
+  <% if (Array.isArray(galerieStatica) && galerieStatica.length > 0) { %>
+    <div id="galerie-statica">
+      <% galerieStatica.forEach((imagine) => { %>
+        <figure>
+          <picture>
+            <source srcset="<%= imagine.sursaMica %>" media="(max-width:700px)" />
+            <source srcset="<%= imagine.sursaMedie %>" media="(max-width:1200px)" />
+            <img
+              src="<%= imagine.sursaMare %>"
+              alt="<%= imagine.altText %>"
+              title="<%= imagine.descriere %>"
+              loading="lazy"
+            />
+          </picture>
+          <figcaption><%= imagine.nume %> - <%= imagine.descriere %></figcaption>
+        </figure>
+      <% }); %>
+    </div>
+  <% } else { %>
+    <p>Nu exista imagini disponibile pentru intervalul curent.</p>
+  <% } %>
+</section>

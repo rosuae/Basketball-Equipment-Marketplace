@@ -1,0 +1,137 @@
+{
+  "cale_galerie": "/src/images/galerie_statica",
+  "imagini": [
+    {
+      "cale_relativa": "booker.jpg",
+      "nume": "Devin Booker",
+      "descriere": "Colectia Booker Sunrise: sneakers low-top si tricouri pentru sesiuni rapide.",
+      "timp": "dimineata",
+      "alt": "Produse din colectia Devin Booker Sunrise"
+    },
+    {
+      "cale_relativa": "curry.jpg",
+      "nume": "Stephen Curry",
+      "descriere": "Colectia Curry Precision: sneakers usori si maneci compresive pentru shooter-i.",
+      "timp": "dimineata",
+      "alt": "Articole din colectia Stephen Curry Precision"
+    },
+    {
+      "cale_relativa": "durant.jpg",
+      "nume": "Kevin Durant",
+      "descriere": "Colectia Durant Length: incaltaminte stabila si hanorace tehnice pentru antrenament.",
+      "timp": "dimineata",
+      "alt": "Echipament din colectia Kevin Durant Length"
+    },
+    {
+      "cale_relativa": "edwards.jpg",
+      "nume": "Anthony Edwards",
+      "descriere": "Colectia Edwards Burst: sneakers aderenti si short-uri pentru joc exploziv.",
+      "timp": "dimineata",
+      "alt": "Produse din colectia Anthony Edwards Burst"
+    },
+    {
+      "cale_relativa": "giannis.jpg",
+      "nume": "Giannis Antetokounmpo",
+      "descriere": "Colectia Giannis Power Move: ghete robuste si accesorii pentru forta in tranzitie.",
+      "timp": "dimineata",
+      "alt": "Articole din colectia Giannis Power Move"
+    },
+    {
+      "cale_relativa": "harden.jpg",
+      "nume": "James Harden",
+      "descriere": "Colectia Harden Handle: sneakers cu amortizare moale si echipament de control al ritmului.",
+      "timp": "dimineata",
+      "alt": "Echipament din colectia James Harden Handle"
+    },
+    {
+      "cale_relativa": "jokic.jpg",
+      "nume": "Nikola Jokic",
+      "descriere": "Colectia Jokic Vision: piese confortabile pentru joc inteligent si versatil.",
+      "timp": "zi",
+      "alt": "Produse din colectia Nikola Jokic Vision"
+    },
+    {
+      "cale_relativa": "kawhi.jpg",
+      "nume": "Kawhi Leonard",
+      "descriere": "Colectia Kawhi Lockdown: sneakers stabili si echipament pentru defensiva.",
+      "timp": "zi",
+      "alt": "Articole din colectia Kawhi Lockdown"
+    },
+    {
+      "cale_relativa": "kobe.jpg",
+      "nume": "Kobe Bryant",
+      "descriere": "Colectia Kobe Legacy: modele iconice si textile premium pentru performanta.",
+      "timp": "zi",
+      "alt": "Echipament din colectia Kobe Legacy"
+    },
+    {
+      "cale_relativa": "kyrie.jpg",
+      "nume": "Kyrie Irving",
+      "descriere": "Colectia Kyrie Creative: sneakers flexibili si accesorii pentru schimbari de directie.",
+      "timp": "zi",
+      "alt": "Produse din colectia Kyrie Creative"
+    },
+    {
+      "cale_relativa": "lamelo.jpg",
+      "nume": "LaMelo Ball",
+      "descriere": "Colectia LaMelo Flow: design modern, culori vibrante si confort urban-sport.",
+      "timp": "zi",
+      "alt": "Articole din colectia LaMelo Flow"
+    },
+    {
+      "cale_relativa": "lebron.jpg",
+      "nume": "LeBron James",
+      "descriere": "Colectia LeBron Elite: piese premium pentru sustinere, impact si durabilitate.",
+      "timp": "noapte",
+      "alt": "Echipament din colectia LeBron Elite",
+      "atribuire": {
+        "autor": "EDrost88",
+        "sursa": "https://www.flickr.com/photos/edrost88/15238849490/",
+        "tip_licenta": "CC BY 2.0",
+        "pagina_licenta": "https://creativecommons.org/licenses/by/2.0/"
+      }
+    },
+    {
+      "cale_relativa": "lillard.jpg",
+      "nume": "Damian Lillard",
+      "descriere": "Colectia Lillard Clutch: sneakers pentru finaluri intense si control pe perimetru.",
+      "timp": "zi",
+      "alt": "Produse din colectia Damian Lillard Clutch"
+    },
+    {
+      "cale_relativa": "luka.jpg",
+      "nume": "Luka Doncic",
+      "descriere": "Colectia Luka Tempo: echipament versatil pentru control si creatie in atac.",
+      "timp": "noapte",
+      "alt": "Articole din colectia Luka Tempo"
+    },
+    {
+      "cale_relativa": "morant.jpg",
+      "nume": "Ja Morant",
+      "descriere": "Colectia Morant Air: incaltaminte reactiva si piese usoare pentru elevatie.",
+      "timp": "noapte",
+      "alt": "Echipament din colectia Ja Morant Air"
+    },
+    {
+      "cale_relativa": "traeyoung.jpg",
+      "nume": "Trae Young",
+      "descriere": "Colectia Trae Playmaker: sneakers agili si accesorii pentru pick-and-roll.",
+      "timp": "noapte",
+      "alt": "Produse din colectia Trae Young Playmaker"
+    },
+    {
+      "cale_relativa": "westbrook.jpg",
+      "nume": "Russell Westbrook",
+      "descriere": "Colectia Westbrook Drive: stil energic, texturi rezistente si fit atletic.",
+      "timp": "noapte",
+      "alt": "Articole din colectia Russell Westbrook Drive"
+    },
+    {
+      "cale_relativa": "zion.jpg",
+      "nume": "Zion Williamson",
+      "descriere": "Colectia Zion Force: amortizare puternica si sustinere pentru joc fizic.",
+      "timp": "noapte",
+      "alt": "Echipament din colectia Zion Force"
+    }
+  ]
+}

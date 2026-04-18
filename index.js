@@ -1,11 +1,21 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const sharp = require('sharp');
 
 const obGlobal = {
   obErori: null,
+  obGalerie: null,
+  caleGalerieAbsoluta: null,
+  caleCacheGalerie: null,
 };
 const vect_foldere = ['temp', 'logs', 'backup', 'fisiere_uploadate'];
+const TIMPURI_GALERIE = new Set(['dimineata', 'zi', 'noapte']);
+const DIMENSIUNI_GALERIE = {
+  small: 220,
+  medium: 340,
+};
+const EXTENSII_IMAGINI_ACCEPTATE = new Set(['.jpg', '.jpeg', '.png', '.webp']);
 
 const server = express();
 const PORT = process.env.PORT || 8080;
@@ -32,6 +42,170 @@ function initErori() {
   }));
 
   obGlobal.obErori = obErori;
+}
+
+function verificaFisierGalerieLaPornire() {
+  const caleGalerieJson = path.join(__dirname, 'src/json/galerie.json');
+
+  if (!fs.existsSync(caleGalerieJson)) {
+    console.error(
+      '[Eroare initializare] Fisierul obligatoriu al galeriei lipseste: src/json/galerie.json.'
+    );
+    process.exit(1);
+  }
+
+  const continut = fs.readFileSync(caleGalerieJson, 'utf-8');
+  const obGalerie = JSON.parse(continut);
+  const proprietatiObligatorii = ['cale_galerie', 'imagini'];
+  const proprietatiLipsa = proprietatiObligatorii.filter(
+    (proprietate) => !Object.prototype.hasOwnProperty.call(obGalerie, proprietate)
+  );
+
+  if (proprietatiLipsa.length > 0) {
+    console.error(
+      `[Eroare initializare] Structura invalida in src/json/galerie.json. Lipsesc proprietatile: ${proprietatiLipsa.join(', ')}.`
+    );
+    process.exit(1);
+  }
+
+  if (!Array.isArray(obGalerie.imagini) || obGalerie.imagini.length === 0) {
+    console.error(
+      '[Eroare initializare] Proprietatea imagini din src/json/galerie.json trebuie sa fie un vector nevid.'
+    );
+    process.exit(1);
+  }
+
+  const caleGalerieRelativa = String(obGalerie.cale_galerie).replace(/^[/\\]+/, '');
+  const caleGalerieAbsoluta = path.join(__dirname, caleGalerieRelativa);
+
+  if (!fs.existsSync(caleGalerieAbsoluta) || !fs.statSync(caleGalerieAbsoluta).isDirectory()) {
+    console.error(
+      `[Eroare initializare] Folderul galeriei nu exista: ${obGalerie.cale_galerie}. Cale verificata: ${caleGalerieAbsoluta}.`
+    );
+    process.exit(1);
+  }
+
+  const campuriImagineObligatorii = ['cale_relativa', 'nume', 'descriere', 'timp'];
+  obGalerie.imagini.forEach((imagine, index) => {
+    const campuriLipsa = campuriImagineObligatorii.filter(
+      (camp) => !Object.prototype.hasOwnProperty.call(imagine, camp)
+    );
+
+    if (campuriLipsa.length > 0) {
+      console.error(
+        `[Eroare initializare] Imagine invalida in src/json/galerie.json la index ${index}. Lipsesc campurile: ${campuriLipsa.join(', ')}.`
+      );
+      process.exit(1);
+    }
+
+    if (!TIMPURI_GALERIE.has(imagine.timp)) {
+      console.error(
+        `[Eroare initializare] Imagine invalida in src/json/galerie.json la index ${index}. Valoarea timp trebuie sa fie una dintre: dimineata, zi, noapte.`
+      );
+      process.exit(1);
+    }
+
+    const numeFisier = path.basename(String(imagine.cale_relativa));
+    const extensie = path.extname(numeFisier).toLowerCase();
+    if (!EXTENSII_IMAGINI_ACCEPTATE.has(extensie)) {
+      console.error(
+        `[Eroare initializare] Imagine invalida in src/json/galerie.json la index ${index}. Extensia ${extensie} nu este acceptata.`
+      );
+      process.exit(1);
+    }
+
+    const caleImagine = path.join(caleGalerieAbsoluta, numeFisier);
+    if (!fs.existsSync(caleImagine) || !fs.statSync(caleImagine).isFile()) {
+      console.error(
+        `[Eroare initializare] Fisier imagine inexistent pentru src/json/galerie.json la index ${index}: ${numeFisier}.`
+      );
+      process.exit(1);
+    }
+  });
+}
+
+function initGalerie() {
+  const caleGalerieJson = path.join(__dirname, 'src/json/galerie.json');
+  const continut = fs.readFileSync(caleGalerieJson, 'utf-8');
+  const obGalerie = JSON.parse(continut);
+
+  obGlobal.obGalerie = {
+    cale_galerie: String(obGalerie.cale_galerie),
+    imagini: obGalerie.imagini.map((imagine) => ({
+      ...imagine,
+      cale_relativa: path.basename(String(imagine.cale_relativa)),
+    })),
+  };
+
+  const caleGalerieRelativa = String(obGalerie.cale_galerie).replace(/^[/\\]+/, '');
+  obGlobal.caleGalerieAbsoluta = path.join(__dirname, caleGalerieRelativa);
+  obGlobal.caleCacheGalerie = path.join(__dirname, 'temp', 'galerie_statica');
+  fs.mkdirSync(obGlobal.caleCacheGalerie, { recursive: true });
+}
+
+function obtineIntervalGalerieDinOra(ora) {
+  if (ora >= 5 && ora < 12) {
+    return 'dimineata';
+  }
+
+  if (ora >= 12 && ora < 20) {
+    return 'zi';
+  }
+
+  return 'noapte';
+}
+
+function completeazaLaMinimSaseImagini(imagini) {
+  if (imagini.length === 0) {
+    return [];
+  }
+
+  const selectie = [...imagini];
+  let index = 0;
+
+  while (selectie.length < 6) {
+    selectie.push(imagini[index % imagini.length]);
+    index += 1;
+  }
+
+  return selectie;
+}
+
+function trunchiazaLaMultipluDe3(imagini) {
+  const multipluDe3 = imagini.length - (imagini.length % 3);
+  if (multipluDe3 === 0) {
+    return imagini;
+  }
+
+  return imagini.slice(0, multipluDe3);
+}
+
+function pregatesteImagineGaleriePentruTemplate(imagine, index) {
+  const numeFisier = path.basename(imagine.cale_relativa);
+  const numeCodificat = encodeURIComponent(numeFisier);
+
+  return {
+    ...imagine,
+    indexNumeric: index + 1,
+    altText: imagine.alt && String(imagine.alt).trim() ? imagine.alt : imagine.nume,
+    sursaMare: path.posix.join(obGlobal.obGalerie.cale_galerie, numeFisier),
+    sursaMedie: `/galerie-statica/imagini/medium/${numeCodificat}`,
+    sursaMica: `/galerie-statica/imagini/small/${numeCodificat}`,
+  };
+}
+
+function obtineDateGaleriePentruRandare() {
+  const intervalCurent = obtineIntervalGalerieDinOra(new Date().getHours());
+  const imaginiInterval = obGlobal.obGalerie.imagini.filter(
+    (imagine) => imagine.timp === intervalCurent
+  );
+  const minimSase = completeazaLaMinimSaseImagini(imaginiInterval);
+  const selectieFinala = trunchiazaLaMultipluDe3(minimSase);
+
+  return {
+    intervalGalerie: intervalCurent,
+    galerieStatica: selectieFinala.map(pregatesteImagineGaleriePentruTemplate),
+  };
 }
 
 function verificaProprietatiDuplicateInJsonString(jsonText, caleFisier) {
@@ -307,6 +481,8 @@ function verificaFisierEroriLaPornire() {
 
 verificaFisierEroriLaPornire();
 initErori();
+verificaFisierGalerieLaPornire();
+initGalerie();
 
 server.set('view engine', 'ejs');
 server.set('views', path.join(__dirname, 'views'));
@@ -361,27 +537,103 @@ server.use('/resurse', (req, res, next) => {
 
 server.use('/resurse', express.static(path.join(__dirname, 'src'), { index: false }));
 
+server.get('/galerie-statica/imagini/:dimensiune/:fisier', async (req, res) => {
+  try {
+    const { dimensiune } = req.params;
+    const latime = DIMENSIUNI_GALERIE[dimensiune];
+
+    if (!latime) {
+      return afisareEroare(res, 400, 'Cerere invalida', 'Dimensiune imagine invalida.');
+    }
+
+    const fisierDecodat = decodeURIComponent(String(req.params.fisier || ''));
+    const fisierSigur = path.basename(fisierDecodat);
+    if (!fisierSigur || fisierSigur !== fisierDecodat) {
+      return afisareEroare(res, 400, 'Cerere invalida', 'Nume de fisier invalid.');
+    }
+
+    const extensie = path.extname(fisierSigur).toLowerCase();
+    if (!EXTENSII_IMAGINI_ACCEPTATE.has(extensie)) {
+      return afisareEroare(res, 400, 'Cerere invalida', 'Extensie imagine neacceptata.');
+    }
+
+    const caleOriginala = path.join(obGlobal.caleGalerieAbsoluta, fisierSigur);
+    if (!fs.existsSync(caleOriginala) || !fs.statSync(caleOriginala).isFile()) {
+      return afisareEroare(res, 404, 'Imagine indisponibila', 'Imaginea ceruta nu exista.');
+    }
+
+    const subfolderCache = path.join(obGlobal.caleCacheGalerie, dimensiune);
+    fs.mkdirSync(subfolderCache, { recursive: true });
+    const numeCache = `${path.parse(fisierSigur).name}-${dimensiune}${extensie}`;
+    const caleCache = path.join(subfolderCache, numeCache);
+
+    if (!fs.existsSync(caleCache)) {
+      await sharp(caleOriginala)
+        .resize({ width: latime })
+        .toFile(caleCache);
+    }
+
+    return res.sendFile(caleCache);
+  } catch (error) {
+    console.error('[Eroare galerie] Nu s-a putut genera imaginea redimensionata.', error);
+    return afisareEroare(res, 500);
+  }
+});
+
 server.get(['/', '/index', '/home'], (req, res) => {
+  const dateGalerie = obtineDateGaleriePentruRandare();
+
   res.render('pagini/index', {
     title: 'Basketball Equipment Marketplace',
     heading: 'Bine ai venit in magazinul de echipament pentru baschet',
+    galerieStatica: dateGalerie.galerieStatica,
+    intervalGalerie: dateGalerie.intervalGalerie,
+  });
+});
+
+server.get('/produse', (req, res) => {
+  const dateGalerie = obtineDateGaleriePentruRandare();
+
+  res.render('pagini/produse', {
+    title: 'Produse Iverson Era',
+    heading: 'Produse si galerie statica',
+    galerieStatica: dateGalerie.galerieStatica,
+    intervalGalerie: dateGalerie.intervalGalerie,
   });
 });
 
 server.get('/:pagina', (req, res) => {
   const { pagina } = req.params;
+  const paginaCuratata = String(pagina || '').trim();
 
-  res.render(`pagini/${pagina}`, function (eroare, rezultatRandare) {
-    if (eroare) {
-      if (eroare.message.startsWith('Failed to lookup view')) {
-        return afisareEroare(res, 404);
-      }
+  if (/\.html$/i.test(paginaCuratata)) {
+    const numeFaraExtensie = paginaCuratata.replace(/\.html$/i, '');
 
-      return afisareEroare(res, 500);
+    if (/^(index|home)$/i.test(numeFaraExtensie) || numeFaraExtensie.length === 0) {
+      return res.redirect('/');
     }
 
-    return res.send(rezultatRandare);
-  });
+    return res.redirect(`/${numeFaraExtensie}`);
+  }
+
+  res.render(
+    `pagini/${pagina}`,
+    {
+      galerieStatica: [],
+      intervalGalerie: obtineIntervalGalerieDinOra(new Date().getHours()),
+    },
+    function (eroare, rezultatRandare) {
+      if (eroare) {
+        if (eroare.message.startsWith('Failed to lookup view')) {
+          return afisareEroare(res, 404);
+        }
+
+        return afisareEroare(res, 500);
+      }
+
+      return res.send(rezultatRandare);
+    }
+  );
 });
 
 server.listen(PORT, () => {

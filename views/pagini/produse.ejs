@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ro">
+  <head>
+    <%- include('../fragmente/head', { title }) %>
+  </head>
+  <body>
+    <%- include('../fragmente/header') %>
+
+    <main>
+      <section>
+        <h2><%= heading %></h2>
+        <p>
+          Pagina de produse este in constructie. Pana la finalizarea catalogului,
+          poti explora selectia noastra vizuala in galeria statica de mai jos.
+        </p>
+      </section>
+
+      <section id="galerie-produse">
+        <%- include('../fragmente/galerie-statica', {
+          galerieStatica: typeof galerieStatica !== 'undefined' ? galerieStatica : [],
+          intervalGalerie: typeof intervalGalerie !== 'undefined' ? intervalGalerie : 'zi'
+        }) %>
+      </section>
+
+      <%- include('../fragmente/date-utilizator') %>
+    </main>
+
+    <%- include('../fragmente/footer') %>
+  </body>
+</html>
