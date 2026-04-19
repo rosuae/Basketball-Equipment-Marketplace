@@ -2,12 +2,15 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const sharp = require('sharp');
+const sass = require('sass');
 
 const obGlobal = {
   obErori: null,
   obGalerie: null,
   caleGalerieAbsoluta: null,
   caleCacheGalerie: null,
+  folderScss: path.join(__dirname, 'src', 'css'),
+  folderCss: path.join(__dirname, 'src', 'css'),
 };
 const vect_foldere = ['temp', 'logs', 'backup', 'fisiere_uploadate'];
 const TIMPURI_GALERIE = new Set(['dimineata', 'zi', 'noapte']);
@@ -26,6 +29,103 @@ vect_foldere.forEach((numeFolder) => {
     fs.mkdirSync(caleFolder);
   }
 });
+
+function compileazaScss(caleScss, caleCss) {
+  if (!caleScss) {
+    throw new Error('[SCSS] Parametrul caleScss este obligatoriu.');
+  }
+
+  const caleScssAbsoluta = path.isAbsolute(caleScss)
+    ? caleScss
+    : path.join(obGlobal.folderScss, caleScss);
+
+  const caleCssAbsoluta = caleCss
+    ? (path.isAbsolute(caleCss) ? caleCss : path.join(obGlobal.folderCss, caleCss))
+    : path.join(
+      obGlobal.folderCss,
+      `${path.basename(caleScss, path.extname(caleScss))}.css`
+    );
+
+  if (fs.existsSync(caleCssAbsoluta) && fs.statSync(caleCssAbsoluta).isFile()) {
+    try {
+      const caleRelativaCss = path.relative(obGlobal.folderCss, caleCssAbsoluta);
+      const numeBackup = caleRelativaCss.startsWith('..')
+        ? path.basename(caleCssAbsoluta)
+        : caleRelativaCss;
+      const caleBackup = path.join(__dirname, 'backup', 'resurse', 'css', numeBackup);
+
+      fs.mkdirSync(path.dirname(caleBackup), { recursive: true });
+      fs.copyFileSync(caleCssAbsoluta, caleBackup);
+    } catch (error) {
+      console.error(`[SCSS] Eroare la copierea backup pentru ${caleCssAbsoluta}: ${error.message}`);
+    }
+  }
+
+  const rezultatCompilare = sass.compile(caleScssAbsoluta, {
+    style: 'expanded',
+  });
+
+  fs.mkdirSync(path.dirname(caleCssAbsoluta), { recursive: true });
+  fs.writeFileSync(caleCssAbsoluta, rezultatCompilare.css);
+
+  return caleCssAbsoluta;
+}
+
+function colecteazaFisiereScssRecursiv(caleFolder) {
+  if (!fs.existsSync(caleFolder)) {
+    return [];
+  }
+
+  const intrari = fs.readdirSync(caleFolder, { withFileTypes: true });
+  const fisiereScss = [];
+
+  intrari.forEach((intrare) => {
+    const caleIntrare = path.join(caleFolder, intrare.name);
+
+    if (intrare.isDirectory()) {
+      fisiereScss.push(...colecteazaFisiereScssRecursiv(caleIntrare));
+      return;
+    }
+
+    if (intrare.isFile() && path.extname(intrare.name).toLowerCase() === '.scss') {
+      fisiereScss.push(caleIntrare);
+    }
+  });
+
+  return fisiereScss;
+}
+
+function compileazaInitialToateScss() {
+  const fisiereScss = colecteazaFisiereScssRecursiv(obGlobal.folderScss);
+
+  fisiereScss.forEach((caleScssAbsoluta) => {
+    const caleRelativaScss = path.relative(obGlobal.folderScss, caleScssAbsoluta);
+    const caleRelativaCss = caleRelativaScss.replace(/\.scss$/i, '.css');
+    compileazaScss(caleRelativaScss, caleRelativaCss);
+  });
+}
+
+function pornesteWatchScss() {
+  fs.watch(obGlobal.folderScss, { recursive: true }, (eveniment, numeFisier) => {
+    if (!numeFisier || path.extname(numeFisier).toLowerCase() !== '.scss') {
+      return;
+    }
+
+    const caleScssRelativa = String(numeFisier);
+    const caleScssAbsoluta = path.join(obGlobal.folderScss, caleScssRelativa);
+
+    if (!fs.existsSync(caleScssAbsoluta) || !fs.statSync(caleScssAbsoluta).isFile()) {
+      return;
+    }
+
+    try {
+      const caleCssRelativa = caleScssRelativa.replace(/\.scss$/i, '.css');
+      compileazaScss(caleScssRelativa, caleCssRelativa);
+    } catch (error) {
+      console.error(`[SCSS] Eroare la compilarea fisierului ${caleScssRelativa} (${eveniment}): ${error.message}`);
+    }
+  });
+}
 
 function initErori() {
   const caleEroriJson = path.join(__dirname, 'src/json/erori.json');
@@ -483,6 +583,8 @@ verificaFisierEroriLaPornire();
 initErori();
 verificaFisierGalerieLaPornire();
 initGalerie();
+compileazaInitialToateScss();
+pornesteWatchScss();
 
 server.set('view engine', 'ejs');
 server.set('views', path.join(__dirname, 'views'));

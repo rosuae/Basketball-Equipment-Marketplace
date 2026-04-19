@@ -1,141 +1,24 @@
-#main-nav #hamburger,
-#main-nav #ch-menu { display: none; }
-
-#main-nav .meniu,
-#main-nav .meniu ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-#main-nav .meniu {
+#main-nav .meniu, #main-nav .meniu > li > ul li > a, #main-nav .meniu > li > .menu-link {
   display: flex;
   align-items: center;
-  gap: 0;
 }
 
-#main-nav .meniu > li {
-  position: relative;
-  width: 10rem;
-  height: 2.9rem;
-  border: 1px solid var(--culoare-border);
-  background: var(--culoare-fundal);
-  z-index: 1;
-}
-
-#main-nav .meniu > li.menu-right { margin-left: auto; }
-
-#main-nav .meniu > li > .menu-link {
-  display: flex;
-  align-items: center;
+#main-nav .meniu > li > ul li > a, #main-nav .meniu > li > .menu-link {
   width: 100%;
   box-sizing: border-box;
-  justify-content: center;
-  gap: 0.45rem;
-  height: 100%;
-  color: var(--culoare-text);
-  font-weight: 700;
-  position: relative;
-  transition: color 0.25s;
 }
 
-#main-nav .meniu > li > .menu-link::before {
-  content: "";
-  position: absolute;
-  inset: 0.22rem;
-  border-radius: 0.6rem;
-  background: color-mix(in srgb, var(--culoare-contur), transparent 65%);
-  transform: scale(0);
-  transition: transform 0.4s;
-  z-index: 0;
+@keyframes open {
+  from {
+    opacity: 0;
+    transform: scale(0);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
-
-#main-nav .meniu > li > .menu-link .menu-icon,
-#main-nav .meniu > li > .menu-link .menu-text {
-  position: relative;
-  z-index: 1;
-}
-
-#main-nav .meniu > li:hover > .menu-link,
-#main-nav .meniu > li:focus-within > .menu-link {
-  color: var(--culoare-contur);
-}
-
-#main-nav .meniu > li:hover > .menu-link::before,
-#main-nav .meniu > li:focus-within > .menu-link::before {
-  transform: scale(1);
-}
-
-#main-nav .meniu > li > ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  position: absolute;
-  top: 100%;
-  left: 0;
-  min-width: 100%;
-  transform: scale(0);
-  transform-origin: top left;
-  border: 1px solid var(--culoare-border);
-  box-shadow: 0 0.35rem 0.9rem rgba(0, 0, 0, 0.35);
-  opacity: 0;
-  visibility: hidden;
-  transition: transform 0.4s, opacity 0.4s;
-  z-index: 20;
-  margin-top: 0.2rem;
-}
-
-#main-nav .meniu > li > ul li {
-  animation: submenu-open 0.4s both;
-}
-
-#main-nav .meniu > li > ul li:nth-child(1) { animation-delay: 0.04s; }
-#main-nav .meniu > li > ul li:nth-child(2) { animation-delay: 0.08s; }
-#main-nav .meniu > li > ul li:nth-child(3) { animation-delay: 0.12s; }
-#main-nav .meniu > li > ul li:nth-child(4) { animation-delay: 0.16s; }
-#main-nav .meniu > li > ul li:nth-child(5) { animation-delay: 0.2s; }
-#main-nav .meniu > li > ul li:nth-child(6) { animation-delay: 0.24s; }
-#main-nav .meniu > li > ul li:nth-child(7) { animation-delay: 0.28s; }
-#main-nav .meniu > li > ul li:nth-child(8) { animation-delay: 0.32s; }
-
-#main-nav .meniu > li > ul li > a {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  box-sizing: border-box;
-  justify-content: flex-start;
-  min-height: 2.4rem;
-  padding: 0.55rem 0.8rem;
-  color: var(--culoare-text);
-  background: var(--culoare-fundal);
-  transition: all 0.25s;
-}
-
-#main-nav .meniu > li > ul li > a:hover,
-#main-nav .meniu > li > ul li > a:focus-visible {
-  color: var(--culoare-contur);
-  background: var(--culoare-hover);
-  text-shadow: 0 0 0.06rem currentColor, 0 0 0.24rem currentColor;
-}
-
-#main-nav .meniu > li:hover > ul,
-#main-nav .meniu > li:focus-within > ul {
-  transform: scale(1);
-  opacity: 1;
-  visibility: visible;
-}
-
-#main-nav .meniu > li:hover,
-#main-nav .meniu > li:focus-within {
-  z-index: 10;
-}
-
-@keyframes submenu-open {
-  from { opacity: 0; transform: scale(0); }
-  to { opacity: 1; transform: scale(1); }
-}
-
-@keyframes burger-reveal {
+@keyframes burger {
   0% {
     clip-path: polygon(0 0, 0 0, 8% 50%, 0 100%, 0 100%, 0 0);
   }
@@ -152,28 +35,192 @@
     clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
   }
 }
+@keyframes submenuArrow {
+  0% {
+    clip-path: polygon(0 0, 0 0, 5% 50%, 0 100%, 0 100%);
+    opacity: 0;
+  }
+  10% {
+    clip-path: polygon(0 0, 8% 0, 15% 50%, 8% 100%, 0 100%);
+    opacity: 0.15;
+  }
+  20% {
+    clip-path: polygon(0 0, 16% 0, 25% 50%, 16% 100%, 0 100%);
+    opacity: 0.3;
+  }
+  30% {
+    clip-path: polygon(0 0, 24% 0, 35% 50%, 24% 100%, 0 100%);
+    opacity: 0.45;
+  }
+  40% {
+    clip-path: polygon(0 0, 32% 0, 45% 50%, 32% 100%, 0 100%);
+    opacity: 0.6;
+  }
+  50% {
+    clip-path: polygon(0 0, 44% 0, 55% 50%, 44% 100%, 0 100%);
+    opacity: 0.7;
+  }
+  60% {
+    clip-path: polygon(0 0, 56% 0, 65% 50%, 56% 100%, 0 100%);
+    opacity: 0.8;
+  }
+  70% {
+    clip-path: polygon(0 0, 68% 0, 78% 50%, 68% 100%, 0 100%);
+    opacity: 0.88;
+  }
+  80% {
+    clip-path: polygon(0 0, 80% 0, 88% 50%, 80% 100%, 0 100%);
+    opacity: 0.94;
+  }
+  90% {
+    clip-path: polygon(0 0, 92% 0, 96% 50%, 92% 100%, 0 100%);
+    opacity: 0.98;
+  }
+  100% {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    opacity: 1;
+  }
+}
+#main-nav {
+  --bg: var(--culoare-fundal);
+  --text: var(--culoare-text);
+  --accent: var(--culoare-contur);
+  --border: var(--culoare-border);
+  --hover: var(--culoare-hover);
+}
+#main-nav #hamburger, #main-nav #ch-menu {
+  display: none;
+}
+#main-nav .meniu, #main-nav .meniu ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+#main-nav .meniu {
+  gap: 0;
+}
+#main-nav .meniu > li {
+  position: relative;
+  width: 10rem;
+  height: 2.9rem;
+  border: 1px solid var(--border);
+  background: var(--bg);
+}
+#main-nav .meniu > li.menu-right {
+  margin-left: auto;
+}
+#main-nav .meniu > li > .menu-link {
+  justify-content: center;
+  gap: 0.45rem;
+  height: 100%;
+  color: var(--text);
+  font-weight: 700;
+  position: relative;
+  transition: color 0.25s;
+}
+#main-nav .meniu > li > .menu-link::before {
+  content: "";
+  position: absolute;
+  inset: 0.22rem;
+  border-radius: 0.6rem;
+  background: color-mix(in srgb, var(--accent), transparent 65%);
+  transform: scale(0);
+  transition: transform 0.4s;
+  z-index: 0;
+}
+#main-nav .meniu > li > .menu-link .menu-icon, #main-nav .meniu > li > .menu-link .menu-text {
+  position: relative;
+  z-index: 1;
+}
+#main-nav .meniu > li:hover > .menu-link, #main-nav .meniu > li:focus-within > .menu-link {
+  color: var(--accent);
+}
+#main-nav .meniu > li:hover > .menu-link::before, #main-nav .meniu > li:focus-within > .menu-link::before {
+  transform: scale(1);
+}
+#main-nav .meniu > li > ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  min-width: 13rem;
+  transform: translateY(2.9rem) scale(0);
+  transform-origin: top left;
+  border: 1px solid var(--border);
+  box-shadow: 0 0.35rem 0.9rem rgba(0, 0, 0, 0.35);
+  opacity: 0;
+  visibility: hidden;
+  transition: transform 0.4s, opacity 0.4s;
+  z-index: 20;
+}
+#main-nav .meniu > li > ul li {
+  animation: open 0.4s both;
+}
+#main-nav .meniu > li > ul li:nth-child(1) {
+  animation-delay: 0.04s;
+}
+#main-nav .meniu > li > ul li:nth-child(2) {
+  animation-delay: 0.08s;
+}
+#main-nav .meniu > li > ul li:nth-child(3) {
+  animation-delay: 0.12s;
+}
+#main-nav .meniu > li > ul li:nth-child(4) {
+  animation-delay: 0.16s;
+}
+#main-nav .meniu > li > ul li:nth-child(5) {
+  animation-delay: 0.2s;
+}
+#main-nav .meniu > li > ul li:nth-child(6) {
+  animation-delay: 0.24s;
+}
+#main-nav .meniu > li > ul li:nth-child(7) {
+  animation-delay: 0.28s;
+}
+#main-nav .meniu > li > ul li:nth-child(8) {
+  animation-delay: 0.32s;
+}
+#main-nav .meniu > li > ul li > a {
+  justify-content: flex-start;
+  min-height: 2.4rem;
+  padding: 0.55rem 0.8rem;
+  color: var(--text);
+  background: var(--bg);
+  transition: all 0.25s;
+}
+#main-nav .meniu > li > ul li > a:hover, #main-nav .meniu > li > ul li > a:focus-visible {
+  color: var(--accent);
+  background: var(--hover);
+  text-shadow: 0 0 0.06rem currentColor, 0 0 0.24rem currentColor;
+}
+#main-nav .meniu > li:hover > ul, #main-nav .meniu > li:focus-within > ul {
+  transform: translateY(2.9rem) scale(1);
+  opacity: 1;
+  visibility: visible;
+}
 
 @media (max-width: 1000px) {
   #main-nav .meniu > li {
     width: 4.1rem;
   }
-  #main-nav .meniu > li > .menu-link .menu-text { display: none; }
+  #main-nav .meniu > li > .menu-link .menu-text {
+    display: none;
+  }
 }
-
 @media (max-width: 760px) {
   #main-nav #hamburger {
     display: flex;
-    align-items: center;
     gap: 0.5rem;
     padding: 0.6rem 0.9rem;
-    border: 1px solid var(--culoare-border);
+    border: 1px solid var(--border);
     border-radius: 0.6rem;
-    background: var(--culoare-fundal);
-    color: var(--culoare-text);
+    background: var(--bg);
+    color: var(--text);
     font-weight: 700;
     cursor: pointer;
   }
-
   #main-nav .meniu {
     display: flex;
     flex-direction: column;
@@ -186,28 +233,28 @@
     clip-path: polygon(0 0, 0 0, 8% 50%, 0 100%, 0 100%, 0 0);
     will-change: clip-path, opacity;
   }
-
   #main-nav .meniu > li {
     width: 100%;
     height: auto;
     min-height: 2.9rem;
-    border-bottom: 1px solid var(--culoare-border);
+    border-bottom: 1px solid var(--border);
     position: relative;
     overflow: visible;
   }
-
-  #main-nav .meniu > li.menu-right { margin-left: 0; }
-
+  #main-nav .meniu > li.menu-right {
+    margin-left: 0;
+  }
   #main-nav .meniu > li > .menu-link {
     justify-content: flex-start;
     padding-inline: 0.85rem;
     min-height: 2.9rem;
   }
-
-  #main-nav .meniu > li > .menu-link .menu-text { display: inline; }
-
-  #main-nav .meniu > li:first-child > .menu-link .menu-text { display: none; }
-
+  #main-nav .meniu > li > .menu-link .menu-text {
+    display: inline;
+  }
+  #main-nav .meniu > li:first-child > .menu-link .menu-text {
+    display: none;
+  }
   #main-nav .meniu > li > ul {
     position: static;
     width: 100%;
@@ -216,39 +263,43 @@
     border: none;
     box-shadow: none;
     transform: none;
-    opacity: 1;
-    visibility: visible;
-    transition: max-height 0.4s;
+    opacity: 0;
+    visibility: hidden;
+    transition: max-height 0.4s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease;
     padding: 0;
     margin: 0;
     z-index: 100;
+    clip-path: polygon(0 0, 0 0, 10% 50%, 0 100%, 0 100%);
+    will-change: clip-path, opacity;
+    background: var(--bg);
   }
-
   #main-nav .meniu > li > ul li {
     animation: none;
     margin: 0;
   }
-
   #main-nav .meniu > li > ul li > a {
     padding: 0.4rem 0.8rem 0.4rem 1.8rem;
     min-height: auto;
-    box-sizing: border-box;
-    width: 100%;
+    transition: all 0.25s;
   }
-
-  #main-nav .meniu > li:hover > ul,
-  #main-nav .meniu > li:focus-within > ul {
+  #main-nav .meniu > li > ul li > a:hover, #main-nav .meniu > li > ul li > a:focus-visible {
+    color: var(--accent);
+    background: var(--hover);
+    text-shadow: 0 0 0.06rem currentColor, 0 0 0.24rem currentColor;
+  }
+  #main-nav .meniu > li:hover > ul, #main-nav .meniu > li:focus-within > ul {
     max-height: 24rem;
+    opacity: 1;
+    visibility: visible;
+    animation: submenuArrow 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
   }
-
   #main-nav #ch-menu:checked ~ .meniu {
     max-height: 100vh;
     opacity: 1;
     visibility: visible;
-    animation: burger-reveal 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation: burger 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
   }
 }
-
 @media (prefers-reduced-motion: reduce) {
   #main-nav .meniu,
   #main-nav #ch-menu:checked ~ .meniu {

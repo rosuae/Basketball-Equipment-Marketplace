@@ -39,11 +39,15 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
+    "build:css": "sass src/css:src/css --no-source-map",
+    "watch:css": "sass --watch src/css:src/css --no-source-map",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
     "ejs": "^5.0.1",
     "express": "^5.2.1",
+    "sass": "^1.93.2",
     "sharp": "^0.34.5"
   }
 }
