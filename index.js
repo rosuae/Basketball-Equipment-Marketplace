@@ -63,6 +63,8 @@ function compileazaScss(caleScss, caleCss) {
 
   const rezultatCompilare = sass.compile(caleScssAbsoluta, {
     style: 'expanded',
+    quietDeps: true,
+    silenceDeprecations: ['import', 'global-builtin', 'color-functions', 'if-function'],
   });
 
   fs.mkdirSync(path.dirname(caleCssAbsoluta), { recursive: true });

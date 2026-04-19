@@ -1,0 +1,39 @@
+$primary: #D21033;
+$dark: #1C1C1C;
+$warning: #C49A45;
+
+$body-bg: black;
+$body-color: white;
+
+$font-family-base: "Boldonse", system-ui;
+
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 760px,
+  lg: 1120px,
+  xl: 1400px,
+  xxl: 1600px
+);
+
+$border-radius: 0.75rem;
+$border-radius-lg: 1rem;
+
+$h1-font-size: 2.6rem;
+$h2-font-size: 2.1rem;
+$h3-font-size: 1.75rem;
+$h4-font-size: 1.5rem;
+$h5-font-size: 1.25rem;
+$h6-font-size: 1rem;
+
+$link-color: #C49A45;
+$link-hover-color: #D21033;
+$btn-border-radius: 0.75rem;
+
+$theme-colors: (
+  "primary": $primary,
+  "dark": $dark,
+  "warning": $warning
+);
+
+@import "../../node_modules/bootstrap/scss/bootstrap";

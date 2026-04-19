@@ -343,6 +343,25 @@ mark {
     color: var(--culoare-border);
 }
 
+#tab-orar.table tbody tr> * {
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+#tab-orar.table tbody tr:nth-child(odd)> * {
+    background-color: var(--culoare-fundal) !important;
+    color: var(--culoare-text) !important;
+}
+
+#tab-orar.table tbody tr:nth-child(even)> * {
+    background-color: var(--culoare-border) !important;
+    color: var(--culoare-fundal) !important;
+}
+
+#tab-orar.table tbody tr:hover> * {
+    background-color: var(--culoare-hover) !important;
+    color: var(--culoare-border) !important;
+}
+
 .zona2,
 .zona8,
 math {
