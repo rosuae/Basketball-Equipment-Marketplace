@@ -240,6 +240,28 @@ a[href^="http"]:hover::before {
     margin-top: 20px;
 }
 
+/* etapa 5 efecte css */
+
+.hr-balonase {
+    width: calc(100% + (2 * var(--margine-pagina, 15px)));
+    height: 50px; 
+    margin: 10px 0; 
+    margin-left: calc(-1 * var(--margine-pagina, 15px));
+    border: 0;
+    opacity: 0.9;
+    background-repeat: repeat-x;
+    
+    background-size: 65px 100%; 
+    
+    background-image:
+        radial-gradient(10px circle at 16px 32px, transparent 25%, var(--culoare-contur) 60%, transparent 85%),
+        radial-gradient(17px circle at 29px 25px, transparent 30%, var(--culoare-border) 60%, transparent 90%),
+        radial-gradient(14px circle at 40px 18px, transparent 25%, var(--culoare-contur) 60%, transparent 85%);
+
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
+}
+
 .galerie-statica-wrap {
     width: 100%;
 }
