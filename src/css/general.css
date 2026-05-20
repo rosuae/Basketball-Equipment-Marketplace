@@ -74,6 +74,7 @@ object {
     border: none;
 }
 
+/* ===== Task video-vtt: stilizare videoclip — latime procentuala, min-width, max-width ===== */
 #video-vtt {
     display: grid;
     gap: 12px;
@@ -162,6 +163,7 @@ a {
     transition: color 0.3s ease;
 }
 
+/* ===== Task stilizare-linkuri: linkuri vizitate ===== */
 a:visited {
     color: var(--culoare-link-vizitat);
 }
@@ -189,7 +191,7 @@ main a:active {
 }
 
 a[href^="http"]::before {
-    content: "⮳";
+    content: "→";
     font-size: 1.5em;
     margin-right: 0.2em;
     color: var(--culoare-contur);
@@ -240,19 +242,19 @@ a[href^="http"]:hover::before {
     margin-top: 20px;
 }
 
-/* etapa 5 efecte css */
+/* ===== efect-css-stilizare-hr: HR cu balonase (radial-gradient) ===== */
 
 .hr-balonase {
     width: calc(100% + (2 * var(--margine-pagina, 15px)));
-    height: 50px; 
-    margin: 10px 0; 
+    height: 50px;
+    margin: 10px 0;
     margin-left: calc(-1 * var(--margine-pagina, 15px));
     border: 0;
     opacity: 0.9;
     background-repeat: repeat-x;
-    
-    background-size: 65px 100%; 
-    
+
+    background-size: 65px 100%;
+
     background-image:
         radial-gradient(10px circle at 16px 32px, transparent 25%, var(--culoare-contur) 60%, transparent 85%),
         radial-gradient(17px circle at 29px 25px, transparent 30%, var(--culoare-border) 60%, transparent 90%),
@@ -266,6 +268,7 @@ a[href^="http"]:hover::before {
     width: 100%;
 }
 
+/* ===== galerie-statica: grid Nx3 pe ecran mare, counter CSS pentru indexare A, B, C ===== */
 #galerie-statica {
     counter-reset: index-galerie;
     display: grid;
@@ -289,6 +292,7 @@ a[href^="http"]:hover::before {
     min-width: 0;
 }
 
+/* ===== galerie-statica: tranzitie hover — rotate(360deg) scale(1.5) + border-radius ===== */
 #galerie-statica img {
     display: block;
     transform-origin: center center;
@@ -305,6 +309,7 @@ a[href^="http"]:hover::before {
     line-height: 1.5;
 }
 
+/* ===== galerie-statica: figcaption (upper-alpha: A, B, C) ===== */
 #galerie-statica figcaption::before {
     counter-increment: index-galerie;
     content: counter(index-galerie, upper-alpha) ". ";
@@ -365,21 +370,21 @@ mark {
     color: var(--culoare-border);
 }
 
-#tab-orar.table tbody tr> * {
+#tab-orar.table tbody tr>* {
     transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
 }
 
-#tab-orar.table tbody tr:nth-child(odd)> * {
+#tab-orar.table tbody tr:nth-child(odd)>* {
     background-color: var(--culoare-fundal) !important;
     color: var(--culoare-text) !important;
 }
 
-#tab-orar.table tbody tr:nth-child(even)> * {
+#tab-orar.table tbody tr:nth-child(even)>* {
     background-color: var(--culoare-border) !important;
     color: var(--culoare-fundal) !important;
 }
 
-#tab-orar.table tbody tr:hover> * {
+#tab-orar.table tbody tr:hover>* {
     background-color: var(--culoare-hover) !important;
     color: var(--culoare-border) !important;
 }
@@ -476,7 +481,8 @@ math mi {
     font-family: "Times New Roman", Times, serif;
 }
 
-math mo, mfrac {
+math mo,
+mfrac {
     color: var(--culoare-border);
     font-weight: 900;
     margin: 0 3px;
@@ -575,6 +581,7 @@ math:hover mi {
         max-width: 760px;
     }
 
+    /* ===== galerie-statica: ecran mediu — grid 4 coloane cu nth-child zig-zag ===== */
     #galerie-statica {
         grid-template-columns: repeat(4, minmax(0, 1fr));
         gap: 12px;
@@ -648,6 +655,7 @@ math:hover mi {
         max-width: 100%;
     }
 
+    /* ===== galerie-statica: ecran mic — o singura coloana ===== */
     #galerie-statica {
         grid-template-columns: 1fr;
         gap: 10px;

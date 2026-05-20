@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <%- include('../fragmente/head', { title: locals.title || 'Produs' }) %>
+</head>
+<body>
+    <%- include('../fragmente/header.ejs') %>
+<main>
+    <% if (locals.produs) { %>
+        <article class="produs-detaliu" style="max-width: 800px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 8px;">
+            <h1><%= produs.nume %></h1>
+            
+            <div class="produs-header" style="display: flex; gap: 20px; margin-bottom: 20px;">
+                <img src="<%= produs.imagine %>" alt="<%= produs.nume %>" style="max-width: 400px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                
+                <div class="produs-info-principala" style="flex: 1;">
+                    <p class="pret" style="font-size: 1.5em; color: #e91e63; font-weight: bold;"><%= produs.pret %> USD</p>
+                    <p><strong>Categorie Generala:</strong> <%= produs.categorie_mare %></p>
+                    <p><strong>Subcategorie:</strong> <%= produs.subcategorie %></p>
+                    
+                    <% if (produs.marime_us) { %>
+                        <p><strong>Marime US:</strong> <%= produs.marime_us %></p>
+                    <% } %>
+                    
+                    <p><strong>Culoare Dominanta:</strong> <%= produs.culoare_dominanta %></p>
+                    
+                    <% if (produs.editie_limitata) { %>
+                        <p style="color: red; font-weight: bold;">🔥 Editie Limitata 🔥</p>
+                    <% } %>
+                </div>
+            </div>
+
+            <div class="produs-descriere" style="margin-top: 20px;">
+                <h3>Descriere Produs</h3>
+                <p><%= produs.descriere %></p>
+            </div>
+
+            <div class="produs-extra" style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #ccc;">
+                <p><strong>Materiale folosite:</strong> <%= produs.materiale %></p>
+                <p><strong>Data Adaugare in Magazin:</strong> 
+                    <% 
+                       // Formatam data daca exista
+                       if(produs.data_adaugare) { 
+                           let d = new Date(produs.data_adaugare);
+                           out = d.toLocaleDateString('ro-RO');
+                       } else {
+                           out = 'N/A';
+                       }
+                    %>
+                    <%= out %>
+                </p>
+            </div>
+            
+            <a href="/produse" style="display: inline-block; margin-top: 20px; padding: 8px 15px; background: #333; color: white; text-decoration: none; border-radius: 4px;">Inapoi la produse</a>
+        </article>
+    <% } else { %>
+        <p>Produsul nu a putut fi incarcat.</p>
+    <% } %>
+</main>
+
+    <%- include('../fragmente/footer.ejs') %>
+</body>
+</html>

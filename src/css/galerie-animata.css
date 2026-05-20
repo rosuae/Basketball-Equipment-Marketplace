@@ -1,0 +1,373 @@
+.dynamic-gallery-container {
+  width: 100%;
+  max-width: 700px;
+  height: 450px;
+  margin: 2rem auto;
+  border: 20px solid transparent;
+  border-image: url("/src/images/jersey.jpg") 33% stretch;
+  overflow: hidden;
+  position: relative;
+  background-color: #1C1C1C;
+  border-radius: 0;
+}
+.dynamic-gallery-container:hover {
+  cursor: pointer;
+}
+.dynamic-gallery-container:hover .gallery-item {
+  animation-play-state: paused !important;
+}
+@media screen and (max-width: 1200px) {
+  .dynamic-gallery-container {
+    display: none !important;
+  }
+}
+
+.dynamic-gallery {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+.dynamic-gallery .gallery-item {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  transform: translateX(0);
+}
+.dynamic-gallery .gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.dynamic-gallery.gallery-count-6 .gallery-item {
+  animation: slideGallery6 24s infinite linear;
+}
+.dynamic-gallery.gallery-count-6 .gallery-item:nth-child(1) {
+  animation-delay: -24s;
+}
+.dynamic-gallery.gallery-count-6 .gallery-item:nth-child(2) {
+  animation-delay: -20s;
+}
+.dynamic-gallery.gallery-count-6 .gallery-item:nth-child(3) {
+  animation-delay: -16s;
+}
+.dynamic-gallery.gallery-count-6 .gallery-item:nth-child(4) {
+  animation-delay: -12s;
+}
+.dynamic-gallery.gallery-count-6 .gallery-item:nth-child(5) {
+  animation-delay: -8s;
+}
+.dynamic-gallery.gallery-count-6 .gallery-item:nth-child(6) {
+  animation-delay: -4s;
+}
+@keyframes slideGallery6 {
+  0% {
+    transform: translateX(0);
+    opacity: 1;
+    z-index: 2;
+  }
+  6.6666666667% {
+    transform: translateX(0);
+    opacity: 1;
+    z-index: 2;
+  }
+  9.1666666667% {
+    transform: translateX(30%);
+    opacity: 0.9;
+    z-index: 2;
+  }
+  11.6666666667% {
+    transform: translateX(-30%);
+    opacity: 0.6;
+    z-index: 2;
+  }
+  14.1666666667% {
+    transform: translateX(60%);
+    opacity: 0.3;
+    z-index: 2;
+  }
+  16.6666666667% {
+    transform: translateX(100%);
+    opacity: 0;
+    z-index: 2;
+  }
+  16.6676666667% {
+    transform: translateX(0);
+    opacity: 0;
+    z-index: 1;
+  }
+  89.999% {
+    transform: translateX(0);
+    opacity: 0;
+    z-index: 1;
+  }
+  90% {
+    transform: translateX(0);
+    opacity: 1;
+    z-index: 1;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+    z-index: 1;
+  }
+}
+.dynamic-gallery.gallery-count-8 .gallery-item {
+  animation: slideGallery8 32s infinite linear;
+}
+.dynamic-gallery.gallery-count-8 .gallery-item:nth-child(1) {
+  animation-delay: -32s;
+}
+.dynamic-gallery.gallery-count-8 .gallery-item:nth-child(2) {
+  animation-delay: -28s;
+}
+.dynamic-gallery.gallery-count-8 .gallery-item:nth-child(3) {
+  animation-delay: -24s;
+}
+.dynamic-gallery.gallery-count-8 .gallery-item:nth-child(4) {
+  animation-delay: -20s;
+}
+.dynamic-gallery.gallery-count-8 .gallery-item:nth-child(5) {
+  animation-delay: -16s;
+}
+.dynamic-gallery.gallery-count-8 .gallery-item:nth-child(6) {
+  animation-delay: -12s;
+}
+.dynamic-gallery.gallery-count-8 .gallery-item:nth-child(7) {
+  animation-delay: -8s;
+}
+.dynamic-gallery.gallery-count-8 .gallery-item:nth-child(8) {
+  animation-delay: -4s;
+}
+@keyframes slideGallery8 {
+  0% {
+    transform: translateX(0);
+    opacity: 1;
+    z-index: 2;
+  }
+  5% {
+    transform: translateX(0);
+    opacity: 1;
+    z-index: 2;
+  }
+  6.875% {
+    transform: translateX(30%);
+    opacity: 0.9;
+    z-index: 2;
+  }
+  8.75% {
+    transform: translateX(-30%);
+    opacity: 0.6;
+    z-index: 2;
+  }
+  10.625% {
+    transform: translateX(60%);
+    opacity: 0.3;
+    z-index: 2;
+  }
+  12.5% {
+    transform: translateX(100%);
+    opacity: 0;
+    z-index: 2;
+  }
+  12.501% {
+    transform: translateX(0);
+    opacity: 0;
+    z-index: 1;
+  }
+  92.499% {
+    transform: translateX(0);
+    opacity: 0;
+    z-index: 1;
+  }
+  92.5% {
+    transform: translateX(0);
+    opacity: 1;
+    z-index: 1;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+    z-index: 1;
+  }
+}
+.dynamic-gallery.gallery-count-10 .gallery-item {
+  animation: slideGallery10 40s infinite linear;
+}
+.dynamic-gallery.gallery-count-10 .gallery-item:nth-child(1) {
+  animation-delay: -40s;
+}
+.dynamic-gallery.gallery-count-10 .gallery-item:nth-child(2) {
+  animation-delay: -36s;
+}
+.dynamic-gallery.gallery-count-10 .gallery-item:nth-child(3) {
+  animation-delay: -32s;
+}
+.dynamic-gallery.gallery-count-10 .gallery-item:nth-child(4) {
+  animation-delay: -28s;
+}
+.dynamic-gallery.gallery-count-10 .gallery-item:nth-child(5) {
+  animation-delay: -24s;
+}
+.dynamic-gallery.gallery-count-10 .gallery-item:nth-child(6) {
+  animation-delay: -20s;
+}
+.dynamic-gallery.gallery-count-10 .gallery-item:nth-child(7) {
+  animation-delay: -16s;
+}
+.dynamic-gallery.gallery-count-10 .gallery-item:nth-child(8) {
+  animation-delay: -12s;
+}
+.dynamic-gallery.gallery-count-10 .gallery-item:nth-child(9) {
+  animation-delay: -8s;
+}
+.dynamic-gallery.gallery-count-10 .gallery-item:nth-child(10) {
+  animation-delay: -4s;
+}
+@keyframes slideGallery10 {
+  0% {
+    transform: translateX(0);
+    opacity: 1;
+    z-index: 2;
+  }
+  4% {
+    transform: translateX(0);
+    opacity: 1;
+    z-index: 2;
+  }
+  5.5% {
+    transform: translateX(30%);
+    opacity: 0.9;
+    z-index: 2;
+  }
+  7% {
+    transform: translateX(-30%);
+    opacity: 0.6;
+    z-index: 2;
+  }
+  8.5% {
+    transform: translateX(60%);
+    opacity: 0.3;
+    z-index: 2;
+  }
+  10% {
+    transform: translateX(100%);
+    opacity: 0;
+    z-index: 2;
+  }
+  10.001% {
+    transform: translateX(0);
+    opacity: 0;
+    z-index: 1;
+  }
+  93.999% {
+    transform: translateX(0);
+    opacity: 0;
+    z-index: 1;
+  }
+  94% {
+    transform: translateX(0);
+    opacity: 1;
+    z-index: 1;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+    z-index: 1;
+  }
+}
+.dynamic-gallery.gallery-count-12 .gallery-item {
+  animation: slideGallery12 48s infinite linear;
+}
+.dynamic-gallery.gallery-count-12 .gallery-item:nth-child(1) {
+  animation-delay: -48s;
+}
+.dynamic-gallery.gallery-count-12 .gallery-item:nth-child(2) {
+  animation-delay: -44s;
+}
+.dynamic-gallery.gallery-count-12 .gallery-item:nth-child(3) {
+  animation-delay: -40s;
+}
+.dynamic-gallery.gallery-count-12 .gallery-item:nth-child(4) {
+  animation-delay: -36s;
+}
+.dynamic-gallery.gallery-count-12 .gallery-item:nth-child(5) {
+  animation-delay: -32s;
+}
+.dynamic-gallery.gallery-count-12 .gallery-item:nth-child(6) {
+  animation-delay: -28s;
+}
+.dynamic-gallery.gallery-count-12 .gallery-item:nth-child(7) {
+  animation-delay: -24s;
+}
+.dynamic-gallery.gallery-count-12 .gallery-item:nth-child(8) {
+  animation-delay: -20s;
+}
+.dynamic-gallery.gallery-count-12 .gallery-item:nth-child(9) {
+  animation-delay: -16s;
+}
+.dynamic-gallery.gallery-count-12 .gallery-item:nth-child(10) {
+  animation-delay: -12s;
+}
+.dynamic-gallery.gallery-count-12 .gallery-item:nth-child(11) {
+  animation-delay: -8s;
+}
+.dynamic-gallery.gallery-count-12 .gallery-item:nth-child(12) {
+  animation-delay: -4s;
+}
+@keyframes slideGallery12 {
+  0% {
+    transform: translateX(0);
+    opacity: 1;
+    z-index: 2;
+  }
+  3.3333333333% {
+    transform: translateX(0);
+    opacity: 1;
+    z-index: 2;
+  }
+  4.5833333333% {
+    transform: translateX(30%);
+    opacity: 0.9;
+    z-index: 2;
+  }
+  5.8333333333% {
+    transform: translateX(-30%);
+    opacity: 0.6;
+    z-index: 2;
+  }
+  7.0833333333% {
+    transform: translateX(60%);
+    opacity: 0.3;
+    z-index: 2;
+  }
+  8.3333333333% {
+    transform: translateX(100%);
+    opacity: 0;
+    z-index: 2;
+  }
+  8.3343333333% {
+    transform: translateX(0);
+    opacity: 0;
+    z-index: 1;
+  }
+  94.999% {
+    transform: translateX(0);
+    opacity: 0;
+    z-index: 1;
+  }
+  95% {
+    transform: translateX(0);
+    opacity: 1;
+    z-index: 1;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+    z-index: 1;
+  }
+}

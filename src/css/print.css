@@ -1,14 +1,19 @@
+/* ===== ETAPA 3 | Task Stil Printare ===== */
 @media print {
+
+    /* ETAPA 3 | Printare — Margini asimetrice stânga/dreapta pe pagini pare/impare */
     @page {
         size: A4;
         margin: 2cm;
     }
 
+    /* Pagini stânga: margin-left 2cm, margin-right 1cm */
     @page :left {
         margin-left: 2cm;
         margin-right: 1cm;
     }
 
+    /* Pagini dreapta: margin-left 1cm, margin-right 2cm */
     @page :right {
         margin-left: 1cm;
         margin-right: 2cm;
@@ -21,10 +26,12 @@
     }
 
     body {
+        height: auto !important;
         margin: 0;
         color: black;
     }
 
+    /* ETAPA 3 | Printare — Header: H1 centrat pe prima pagină + page-break după */
     header {
         break-after: page;
     }
@@ -40,6 +47,7 @@
         padding: 40px 20px;
     }
 
+    /* ETAPA 3 | Printare — Meniu afișat ca listă neordonată cu bullet-uri */
     header nav ul,
     #main-nav .meniu {
         list-style: disc;
@@ -47,6 +55,7 @@
         padding: 0;
     }
 
+    /* Subliste cu bullet circle pentru submeniuri */
     header nav ul ul,
     #main-nav .submenu {
         list-style: circle;
@@ -59,29 +68,45 @@
         text-decoration: none;
     }
 
-    #main-nav input, #main-nav i, #hamburger, .menu-text {
+    #main-nav input,
+    #main-nav i,
+    #hamburger,
+    .menu-text {
         display: none !important;
     }
 
-    img, video, iframe, picture, figure, figcaption, #link-top, #sageata, #triunghi {
+    /* ETAPA 3 | Printare — Ascundere media: imagini, videouri, iframe, link-top */
+    img,
+    video,
+    iframe,
+    picture,
+    figure,
+    figcaption,
+    #link-top,
+    #sageata,
+    #triunghi {
         display: none !important;
     }
 
+    /* ETAPA 3 | Printare — Grid afișat ca block (evită secționarea în pagini) */
     #grid-pagina {
         display: block;
     }
 
+    /* ETAPA 3 | Printare — Page-break înainte de footer */
     footer {
         break-before: page;
         margin: 0;
         padding: 20px;
     }
 
+    /* ETAPA 3 | Printare — Linkuri afișate ca text normal (fără culoare/subliniere) */
     a {
         color: black;
         text-decoration: none;
     }
 
+    /* ETAPA 3 | Printare — Banner „proiect școlar”: dreapta-sus, border dublu, 50% lățime */
     p.proiect-scolar {
         position: fixed;
         top: 1.5cm;
@@ -95,32 +120,39 @@
         z-index: 1000;
     }
 
+    /* ETAPA 3 | Printare — Watermark: nume centrat pe fiecare pagină, opacitate 0.3 */
     body::before {
-        content: "Andrei\AEduard Rosu";
+        content: "Andrei\A Eduard Rosu";
         white-space: pre;
         position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
+        top: 45%;
+        left: 20%;
         width: 60%;
         height: 10%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        display: block;
         font-size: 48px;
         font-weight: bold;
         color: rgba(0, 0, 0, 0.3);
         text-align: center;
-        line-height: 1;
-        z-index: -1;
+        line-height: 1.2;
+        z-index: 9999;
+        pointer-events: none;
     }
 
-    h1, h2, h3, h4, h5, h6 {
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
         page-break-after: avoid;
         margin: 15px 0;
     }
 
-    p, ul, ol, blockquote {
+    p,
+    ul,
+    ol,
+    blockquote {
         page-break-inside: avoid;
         margin: 10px 0;
     }
@@ -131,7 +163,8 @@
         page-break-inside: avoid;
     }
 
-    table td, table th {
+    table td,
+    table th {
         border: 1px solid black;
         padding: 8px;
     }

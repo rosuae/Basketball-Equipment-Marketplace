@@ -1,3 +1,4 @@
+# ===== Task gitignore: node_modules + folderele create de aplicatie (Task 20) =====
 .DS_Store
 node_modules/
 temp/
@@ -5,3 +6,6 @@ logs/
 backup/
 fisiere_uploadate/
 custom.css
+.env
+*.md
+lab12/

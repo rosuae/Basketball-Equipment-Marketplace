@@ -1,0 +1,216 @@
+// =====================================================================
+// galerie-animata: SCSS pentru galeria animata de imagini
+// Identificator cerinta: galerie-animata
+// =====================================================================
+@use 'sass:math';
+// Acest fisier SCSS genereaza CSS-ul necesar pentru galeria animata.
+// CSS-ul este compilat dinamic prin Node (functia compileazaScss)
+// la fiecare pornire a serverului, pentru a acomoda numarul aleator
+// de imagini (numar par, intre 6 si 12).
+//
+// Animatia: imaginea curenta gliseaza la dreapta, apoi la stanga,
+// apoi iar la dreapta, micsorand si opacitatea, pentru a fi scoasa
+// din "ecranul" galeriei. Sub ea apare urmatoarea imagine.
+//
+// La hover pe galerie, animatia se opreste (animation-play-state: paused).
+// Galeria nu se afiseaza pe ecran mediu si mic (max-width: 1200px).
+// =====================================================================
+
+// ===== galerie-animata: container principal cu border-image =====
+.dynamic-gallery-container {
+    width: 100%;
+    max-width: 700px;
+    height: 450px;
+    margin: 2rem auto;
+
+    // ===== galerie-animata: border-image cu o imagine aleasa (balls.jpg) =====
+    // Se foloseste 'stretch' pentru ca imaginea sa se intinda pe fiecare latura,
+    // avand cate o imagine stretched pe fiecare din cele 4 laturi.
+    border: 20px solid transparent;
+    border-image: url("/src/images/jersey.jpg") 33% stretch;
+
+    overflow: hidden;
+    position: relative;
+    background-color: #1C1C1C;
+    border-radius: 0;
+
+    // ===== galerie-animata: hover pe container => pauza animatie =====
+    // Cand se vine cu cursorul pe galerie, animatia se opreste.
+    &:hover {
+        cursor: pointer;
+
+        .gallery-item {
+            animation-play-state: paused !important;
+        }
+    }
+
+    // ===== galerie-animata: ascundere pe ecran mediu si mic =====
+    @media screen and (max-width: 1200px) {
+        display: none !important;
+    }
+}
+
+// ===== galerie-animata: wrapper interior al galeriei =====
+.dynamic-gallery {
+    width: 100%;
+    height: 100%;
+    position: relative;
+
+    // ===== galerie-animata: fiecare element/imagine din galerie =====
+    .gallery-item {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        opacity: 0;
+        transform: translateX(0);
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+    }
+
+    // =====================================================================
+    // galerie-animata: MIXIN SASS pentru generarea animatiei
+    // Parametrul $n = numarul de imagini din galerie
+    //
+    // Animatia per imagine ocupa ($active = 100% / $n) din durata totala.
+    // In fereastra activa:
+    //   0%                  => imaginea este vizibila (opacity 1, z-index: 2)
+    //   40% activ           => ramane vizibila
+    //   55% activ           => gliseaza la DREAPTA  (translateX(30%),  opacity 0.9)
+    //   70% activ           => gliseaza la STANGA   (translateX(-30%), opacity 0.6)
+    //   85% activ           => gliseaza la DREAPTA  (translateX(60%),  opacity 0.3)
+    //   100% activ          => iese complet         (translateX(100%), opacity 0)
+    //
+    // Dupa iesire, imaginea sta ascunsa pana aproape de sfarsitul ciclului,
+    // cand reapare dedesubtul imaginii curente (z-index: 1) pentru a fi
+    // vizibila pe fundal in timp ce imaginea de deasupra se misca.
+    // =====================================================================
+    @mixin build-gallery-animation($n) {
+        &.gallery-count-#{$n} {
+            .gallery-item {
+                // ===== galerie-animata: durata totala = $n * 4 secunde =====
+                animation: slideGallery#{$n} #{$n * 4}s infinite linear;
+            }
+
+            // ===== galerie-animata: delay negativ pentru fiecare imagine =====
+            // Se folosesc delay-uri NEGATIVE ca la prima incarcare a paginii,
+            // animatia sa fie deja "in mers" (ca si cum ar fi rulat deja un ciclu).
+            // Astfel, cand imaginea curenta se misca, urmatoarea este deja
+            // vizibila dedesubt din faza de pre-show.
+            // Formula: (index - numarTotal) * 4 secunde
+            // Ex pt n=6: imagine 1 = -24s, imagine 2 = -20s, ..., imagine 6 = -4s
+            @for $i from 0 to $n {
+                .gallery-item:nth-child(#{$i + 1}) {
+                    animation-delay: #{($i - $n) * 4}s;
+                }
+            }
+        }
+
+        // ===== galerie-animata: keyframes pentru animatia de glisare =====
+        // Tranzitia: dreapta -> stanga -> dreapta (cu diminuare opacitate)
+        // Sub imaginea care iese, urmatoarea este deja vizibila (pre-show).
+        @keyframes slideGallery#{$n} {
+            $active: math.div(100%, $n);
+            // Punctul la care imaginea devine vizibila dedesubt (pre-show)
+            // = exact cand imaginea PRECEDENTA incepe sa iasa (la 40% din fereastra ei)
+            $preshow: 100% - $active * 0.6;
+
+            // ===== FAZA ACTIVA: imaginea este pe ecran, deasupra (z-index: 2) =====
+
+            // Imaginea intra in cadru (deja vizibila din pre-show)
+            0% {
+                transform: translateX(0);
+                opacity: 1;
+                z-index: 2;
+            }
+
+            // Ramane vizibila un timp
+            #{$active * 0.4} {
+                transform: translateX(0);
+                opacity: 1;
+                z-index: 2;
+            }
+
+            // Gliseaza la DREAPTA (prima miscare)
+            #{$active * 0.55} {
+                transform: translateX(30%);
+                opacity: 0.9;
+                z-index: 2;
+            }
+
+            // Gliseaza la STANGA (a doua miscare)
+            #{$active * 0.7} {
+                transform: translateX(-30%);
+                opacity: 0.6;
+                z-index: 2;
+            }
+
+            // Gliseaza la DREAPTA si iese (a treia miscare, opacitate scazuta)
+            #{$active * 0.85} {
+                transform: translateX(60%);
+                opacity: 0.3;
+                z-index: 2;
+            }
+
+            // Iese complet din ecran
+            #{$active} {
+                transform: translateX(100%);
+                opacity: 0;
+                z-index: 2;
+            }
+
+            // ===== FAZA ASCUNSA: imaginea dispare si asteapta urmatorul ciclu =====
+
+            // Se reseteaza pozitia (gata sa apara dedesubt)
+            #{$active + 0.001%} {
+                transform: translateX(0);
+                opacity: 0;
+                z-index: 1;
+            }
+
+            // Ramane ascunsa pana la pre-show
+            #{$preshow - 0.001%} {
+                transform: translateX(0);
+                opacity: 0;
+                z-index: 1;
+            }
+
+            // ===== PRE-SHOW: imaginea apare DEDESUBT imaginii curente =====
+            // Sub imaginea care se misca (z-index: 2), aceasta imagine
+            // devine vizibila (z-index: 1, opacity: 1) creand efectul
+            // de "reveal" — cand imaginea de deasupra gliseaza, se vede
+            // urmatoarea dedesubt.
+            #{$preshow} {
+                transform: translateX(0);
+                opacity: 1;
+                z-index: 1;
+            }
+
+            // Ramane vizibila dedesubt pana la sfarsitul ciclului,
+            // apoi la 0% trece pe z-index: 2 si devine imaginea principala
+            100% {
+                transform: translateX(0);
+                opacity: 1;
+                z-index: 1;
+            }
+        }
+    }
+
+    // =====================================================================
+    // galerie-animata: se genereaza animatii pentru TOATE numerele pare
+    // intre 6 si 12 (adica 6, 8, 10, 12)
+    // La fiecare incarcare, serverul alege un numar par aleator si adauga
+    // clasa .gallery-count-N pe .dynamic-gallery
+    // =====================================================================
+    @include build-gallery-animation(6);
+    @include build-gallery-animation(8);
+    @include build-gallery-animation(10);
+    @include build-gallery-animation(12);
+}

@@ -18,6 +18,23 @@
     transform: scale(1);
   }
 }
+@keyframes hamburger-appear {
+  0% {
+    opacity: 0;
+    transform: translateX(-20px) scale(0.5);
+    background-color: transparent;
+  }
+  50% {
+    opacity: 0.5;
+    transform: translateX(10px) scale(1.1);
+    background-color: var(--accent);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+    background-color: var(--text);
+  }
+}
 @keyframes burger {
   0% {
     clip-path: polygon(0 0, 0 0, 8% 50%, 0 100%, 0 100%, 0 0);
@@ -127,10 +144,12 @@
   --border: var(--culoare-border);
   --hover: var(--culoare-hover);
 }
-#main-nav #hamburger, #main-nav #ch-menu {
+#main-nav #hamburger,
+#main-nav #ch-menu {
   display: none;
 }
-#main-nav .meniu, #main-nav .meniu ul {
+#main-nav .meniu,
+#main-nav .meniu ul {
   list-style: none;
   margin: 0;
   padding: 0;
@@ -167,7 +186,8 @@
   transition: transform 0.4s;
   z-index: 0;
 }
-#main-nav .meniu > li > .menu-link .menu-icon, #main-nav .meniu > li > .menu-link .menu-text {
+#main-nav .meniu > li > .menu-link .menu-icon,
+#main-nav .meniu > li > .menu-link .menu-text {
   position: relative;
   z-index: 1;
 }
@@ -259,6 +279,41 @@
     color: var(--text);
     font-weight: 700;
     cursor: pointer;
+    align-items: center;
+  }
+  #main-nav #hamburger .hamburger-lines {
+    position: relative;
+    width: 20px;
+    height: 14px;
+    display: block;
+  }
+  #main-nav #hamburger .hamburger-lines span {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    border-radius: 1px;
+    background-color: var(--text);
+    opacity: 0;
+    animation: hamburger-appear 0.6s ease forwards;
+  }
+  #main-nav #hamburger .hamburger-lines span:nth-child(1) {
+    top: 0px;
+  }
+  #main-nav #hamburger .hamburger-lines span:nth-child(2) {
+    top: 6px;
+  }
+  #main-nav #hamburger .hamburger-lines span:nth-child(3) {
+    top: 12px;
+  }
+  #main-nav #hamburger .hamburger-lines span:nth-child(1) {
+    animation-delay: 0.3s;
+  }
+  #main-nav #hamburger .hamburger-lines span:nth-child(2) {
+    animation-delay: 0.6s;
+  }
+  #main-nav #hamburger .hamburger-lines span:nth-child(3) {
+    animation-delay: 0.9s;
   }
   #main-nav .meniu {
     display: flex;

@@ -2,6 +2,7 @@
 <html lang="ro">
 
 <head>
+<!-- Task 5: include() pentru fragmente head, header, footer -->
     <%- include('../fragmente/head', { title: 'Iverson Era' }) %>
 </head>
 
@@ -443,8 +444,10 @@
             </div>
         </div>
 
+        <!-- ===== efect-css-stilizare-hr: HR stilizat cu radial-gradient balonase ===== -->
         <hr class="hr-balonase" aria-hidden="true">
 
+        <!-- ===== galerie-statica: includere fragment refolosibil (apare si in produse.ejs) ===== -->
         <section id="galerie-home">
             <h2>Colaborările jucătorilor</h2>
             <%- include('../fragmente/galerie-statica', {
@@ -455,6 +458,22 @@
 
         <hr class="hr-balonase" aria-hidden="true">
 
+        <!-- ===== galerie-animata: includere fragment pentru galeria animata ===== -->
+        <!-- Identificator cerinta: galerie-animata -->
+        <!-- Galeria animata afiseaza un numar par aleator (6-12) de imagini distincte. -->
+        <!-- Imaginile se incarca din JSON-ul galeriei statice, pe acelasi criteriu de timp. -->
+        <!-- Animatia: glisare dreapta -> stanga -> dreapta cu diminuare opacitate. -->
+        <!-- Nu se afiseaza pe ecran mediu si mic. La hover, animatia se opreste. -->
+        <section id="galerie-animata-section">
+            <h2>Galerie Animată</h2>
+            <%- include('../fragmente/galerie-animata', {
+                galerieAnimata: typeof galerieAnimata !== 'undefined' ? galerieAnimata : []
+            }) %>
+        </section>
+
+        <hr class="hr-balonase" aria-hidden="true">
+
+        <!-- ===== Task video-vtt: videoclip cu poster, controls, preload, surse multiple, trackuri VTT ===== -->
         <section id="video-vtt">
           <h2>Review Video: Nike Ja 3</h2>
           <p>Clipul are subtitrari in romana si engleza. Subtitrarea in romana este implicita.</p>

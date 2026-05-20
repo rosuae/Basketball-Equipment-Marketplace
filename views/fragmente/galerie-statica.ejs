@@ -1,8 +1,10 @@
+<%# galerie-statica: fragment refolosit in index.ejs SI produse.ejs (nu se duplica codul!) %>
 <section class="galerie-statica-wrap">
   <% if (Array.isArray(galerieStatica) && galerieStatica.length > 0) { %>
     <div id="galerie-statica">
       <% galerieStatica.forEach((imagine) => { %>
         <figure>
+        <%# galerie-statica: picture cu source pentru ecran mic, mediu, mare %>
           <picture>
             <source srcset="<%= imagine.sursaMica %>" media="(max-width:700px)" />
             <source srcset="<%= imagine.sursaMedie %>" media="(max-width:1200px)" />
