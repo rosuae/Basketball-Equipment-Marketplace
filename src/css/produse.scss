@@ -1,0 +1,146 @@
+$border: var(--culoare-border);
+$gold: var(--culoare-contur);
+$bg-dark: var(--culoare-fundal);
+$bg-card: var(--culoare-hover);
+$text: var(--culoare-text);
+
+// === FILTRARE (container) ===
+.filtrare-produse {
+    margin-bottom: 30px;
+    padding: 20px 25px;
+    border: 2px solid $border;
+    border-radius: 12px;
+    background-color: $bg-card;
+
+    h2 {
+        font-size: 1.1rem;
+        margin-bottom: 18px;
+        color: $gold;
+        border-bottom: 1px solid $border;
+        padding-bottom: 10px;
+    }
+
+    .form-label, legend {
+        font-size: 0.85rem;
+        color: $gold;
+        font-weight: bold;
+    }
+}
+
+.hint-text { font-size: 0.75rem; color: #888; margin-top: 3px; font-style: italic; }
+
+// Range labels
+.range-val { font-size: 0.85rem; color: $gold; font-weight: bold; white-space: nowrap; }
+.range-current { font-size: 0.85rem; color: $border; font-weight: bold; white-space: nowrap; }
+
+// Fieldset (materiale)
+.filtru-fieldset {
+    border: 1px solid $border;
+    border-radius: 8px;
+    padding: 12px 15px;
+    margin: 0;
+    legend { font-size: 0.85rem; color: $gold; font-weight: bold; padding: 0 6px; }
+}
+
+// Materiale checkbox + radio
+.filtru-materiale-fieldset { grid-column: 1 / -1; }
+
+.materiale-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.material-item {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 10px; padding: 6px 10px;
+    border: 1px solid rgba(196, 154, 69, 0.2);
+    border-radius: 6px; background-color: rgba(0,0,0,0.3);
+    &:hover { border-color: $gold; }
+}
+
+.mat-check-label {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 0.85rem; color: $text; flex: 1; min-width: 0;
+    label { cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+}
+
+.mat-radio-grup { display: flex; gap: 8px; flex-shrink: 0; }
+.radio-label {
+    display: flex; align-items: center; gap: 5px;
+    cursor: pointer; font-size: 0.85rem; color: $text;
+}
+.radio-are span { color: #4caf50; }
+.radio-nu-are span { color: var(--culoare-border); }
+
+// === AFISARE PRODUSE ===
+.produse-lista { display: flex; flex-wrap: wrap; gap: 25px; }
+
+.produs-articol {
+    border: 2px solid $border; border-radius: 12px;
+    background-color: $bg-card; padding: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    flex: 1 1 100%;
+    &:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(210, 16, 51, 0.2); }
+}
+
+.produs-titlu {
+    font-size: 1.3rem; margin-bottom: 15px;
+    padding-bottom: 10px; border-bottom: 1px solid $border;
+}
+
+.produs-coloane { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
+
+.produs-col1 { display: flex; flex-direction: column; gap: 15px; }
+.produs-col2 { display: flex; flex-direction: column; gap: 12px; }
+
+.produs-imagine {
+    width: 200px; height: 200px; object-fit: cover;
+    border-radius: 8px; border: 1px solid $border;
+    min-width: 200px; max-width: 200px;
+}
+
+.produs-caracteristici {
+    list-style: none; padding: 0; margin: 0;
+    display: flex; flex-direction: column; gap: 6px;
+    li { display: flex; align-items: baseline; gap: 8px; font-size: 0.85rem; line-height: 1.5; }
+}
+
+.caract-nume {
+    font-weight: bold; background-color: $border; color: $text;
+    padding: 2px 8px; border-radius: 4px; white-space: nowrap; font-size: 0.8rem;
+}
+.caract-valoare { color: $gold; }
+
+.produs-categorie, .produs-subcategorie { margin: 0; font-size: 0.9rem; }
+.produs-descriere {
+    margin-top: 10px;
+    p { color: $text; line-height: 1.6; font-size: 0.9rem; opacity: 0.85; }
+}
+
+.btn-detalii {
+    display: inline-block; margin-top: auto; padding: 8px 18px;
+    background: linear-gradient(135deg, $border, #a00d28);
+    color: white !important; text-decoration: none !important;
+    border-radius: 6px; font-size: 0.85rem; font-weight: bold;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    align-self: flex-start;
+    &:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(210, 16, 51, 0.4); }
+    &, &:hover, &:focus-visible { background-image: none; background-size: auto; }
+}
+
+.mesaj-gol {
+    text-align: center; padding: 40px; font-size: 1.1rem;
+    color: $gold; border: 2px dashed $border; border-radius: 12px; flex: 1 1 100%;
+}
+
+.pagina-produse h1 { text-align: center; margin-bottom: 25px; }
+
+// === RESPONSIVE ===
+@media screen and (max-width: 700px) {
+    .materiale-grid { grid-template-columns: 1fr; }
+    .produs-coloane { grid-template-columns: 1fr; }
+    .produs-imagine { width: 100%; max-width: 100%; min-width: 0; height: auto; max-height: 250px; }
+    .material-item { flex-direction: column; align-items: flex-start; }
+}

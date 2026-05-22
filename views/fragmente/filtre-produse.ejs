@@ -1,0 +1,109 @@
+<section class="filtrare-produse">
+    <h2>Filtrare produse</h2>
+    <div class="row g-3">
+
+        <%# 1. Input text — Nume (fuzzy match Levenshtein <= 2) %>
+        <div class="col-md-6 col-12">
+            <label for="filtru-nume" class="form-label">Cauta dupa nume:</label>
+            <input type="text" id="filtru-nume" class="form-control" placeholder="Ex: Jordan, Kobe..." />
+        </div>
+
+        <%# 3. Datalist — Subcategorie %>
+        <div class="col-md-6 col-12">
+            <label for="filtru-subcategorie" class="form-label">Subcategorie:</label>
+            <input type="text" id="filtru-subcategorie" class="form-control" list="lista-subcategorii" placeholder="Alege sau scrie..." />
+            <datalist id="lista-subcategorii">
+                <% for (let sub of subcategoriiSortate) { %>
+                    <option value="<%= sub %>"></option>
+                <% } %>
+            </datalist>
+        </div>
+
+        <%# 2. Input range — Pret maxim %>
+        <div class="col-12">
+            <label for="filtru-pret" class="form-label">Pret maxim:</label>
+            <div class="range-container d-flex align-items-center gap-2">
+                <span class="range-val"><%= pretMinGlobal %></span>
+                <input type="range" id="filtru-pret" class="form-range flex-grow-1" min="<%= pretMinGlobal %>" max="<%= pretMaxGlobal %>" value="<%= pretMaxGlobal %>" step="0.50" />
+                <span class="range-val"><%= pretMaxGlobal %></span>
+                <span class="range-current">(<span id="pret-curent"><%= pretMaxGlobal %></span> USD)</span>
+            </div>
+        </div>
+
+        <%# 4. Grup radio — Editie limitata (Toggle Buttons Bootstrap) %>
+        <div class="col-md-6 col-12">
+            <label class="form-label d-block">Editie limitata:</label>
+            <div class="btn-group" role="group" aria-label="Editie limitata">
+                <input type="radio" class="btn-check" name="filtru-editie" id="editie-oricare" value="oricare" checked autocomplete="off">
+                <label class="btn btn-outline-primary" for="editie-oricare">Oricare</label>
+
+                <input type="radio" class="btn-check" name="filtru-editie" id="editie-da" value="da" autocomplete="off">
+                <label class="btn btn-outline-primary" for="editie-da">Da</label>
+
+                <input type="radio" class="btn-check" name="filtru-editie" id="editie-nu" value="nu" autocomplete="off">
+                <label class="btn btn-outline-primary" for="editie-nu">Nu</label>
+            </div>
+        </div>
+
+        <%# 7. Select simplu — Culoare %>
+        <div class="col-md-6 col-12">
+            <label for="filtru-culoare" class="form-label">Culoare dominanta:</label>
+            <select id="filtru-culoare" class="form-select">
+                <option value="" selected>Oricare</option>
+                <% for (let c of culoriSortate) { %>
+                    <option value="<%= c %>"><%= c %></option>
+                <% } %>
+            </select>
+        </div>
+
+        <%# 6. Textarea — Descriere (Floating Label Bootstrap) %>
+        <div class="col-md-6 col-12">
+            <div class="form-floating">
+                <textarea class="form-control" id="filtru-descriere" placeholder="Cuvinte cheie din descriere..." style="height: 80px"></textarea>
+                <label for="filtru-descriere">Cauta in descriere</label>
+                <div class="invalid-feedback">Descrierea trebuie sa aiba cel putin 3 caractere!</div>
+            </div>
+        </div>
+
+        <%# 8. Select multiplu — Categorie %>
+        <div class="col-md-6 col-12">
+            <label for="filtru-categorie" class="form-label">Categorii (selectie multipla):</label>
+            <select id="filtru-categorie" class="form-select" multiple size="<%= Math.min(categoriiSortate.length, 5) %>">
+                <% for (let cat of categoriiSortate) { %>
+                    <option value="<%= cat %>"><%= cat %></option>
+                <% } %>
+            </select>
+            <small class="hint-text form-text">Ctrl/Cmd pentru selectie multipla. Nimic selectat = toate.</small>
+        </div>
+    </div>
+
+    <%# 5. Checkbox + radio "are"/"nu are" — Materiale %>
+    <fieldset class="filtru-grup filtru-fieldset filtru-materiale-fieldset mt-3">
+        <legend>Filtrare dupa materiale:</legend>
+        <small class="hint-text form-text">Bifeaza materialele. "Are" = produsul contine, "Nu are" = produsul nu contine. Nebifate = ignorate.</small>
+        <div class="materiale-grid">
+            <% for (let mat of materialeSortate) { %>
+                <% const matId = toHtmlId(mat); %>
+                <div class="material-item">
+                    <div class="mat-check-label">
+                        <input type="checkbox" id="mat-<%= matId %>" value="<%= mat %>" class="mat-checkbox form-check-input" />
+                        <label for="mat-<%= matId %>"><%= mat %></label>
+                    </div>
+                    <div class="mat-radio-grup">
+                        <label class="radio-label radio-are"><input type="radio" name="mat-radio-<%= matId %>" value="are" checked class="mat-radio form-check-input" /><span>Are</span></label>
+                        <label class="radio-label radio-nu-are"><input type="radio" name="mat-radio-<%= matId %>" value="nu-are" class="mat-radio form-check-input" /><span>Nu are</span></label>
+                    </div>
+                </div>
+            <% } %>
+        </div>
+    </fieldset>
+
+    <%# ====== BUTOANE ACTIUNE ====== %>
+    <div class="butoane-actiune d-flex flex-wrap gap-2 mt-3 pt-3 border-top border-secondary">
+        <button id="btn-filtreaza" class="btn btn-primary"><i class="bi bi-funnel-fill"></i> <span class="d-none d-md-inline">Filtreaza</span></button>
+        <button id="btn-reset" class="btn btn-outline-primary"><i class="bi bi-arrow-counterclockwise"></i> <span class="d-none d-md-inline">Reseteaza</span></button>
+        <button id="btn-sort-asc" class="btn btn-primary"><i class="bi bi-sort-alpha-down"></i> <span class="d-none d-md-inline">Sortare Ascendent</span></button>
+        <button id="btn-sort-desc" class="btn btn-primary"><i class="bi bi-sort-alpha-up"></i> <span class="d-none d-md-inline">Sortare Descendent</span></button>
+        <button id="btn-calcul" class="btn btn-warning"><i class="bi bi-calculator"></i> <span class="d-none d-md-inline">Calculeaza Medie Pret</span></button>
+    </div>
+</section>

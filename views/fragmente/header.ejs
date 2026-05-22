@@ -33,10 +33,12 @@
                     <span class="menu-text">Produse</span>
                 </a>
                 <ul class="submenu">
-                    <li><a href="/adidasi">Adidași</a></li>
-                    <li><a href="/imbracaminte">Îmbrăcăminte</a></li>
-                    <li><a href="/accesorii">Accesorii</a></li>
-                    <li><a href="/marci">Mărci</a></li>
+                    <li><a href="/produse">Toate</a></li>
+                    <% if (locals.categorii_menu) { %>
+                        <% for (let categ of categorii_menu) { %>
+                            <li><a href="/produse?categorie=<%= categ %>"><%= categ %></a></li>
+                        <% } %>
+                    <% } %>
                 </ul>
             </li>
 
@@ -69,4 +71,34 @@
             </li>
         </ul>
     </nav>
+    <button id="btn-tema" class="btn btn-outline-warning mt-2 ms-3" aria-label="Schimba tema" title="Schimba tema" style="width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+        <i class="fa-solid fa-moon" id="icon-tema" style="font-size: 1.2rem;"></i>
+    </button>
+    <script>
+        (function() {
+            var btn = document.getElementById('btn-tema');
+            var icon = document.getElementById('icon-tema');
+            
+            function updateIcon() {
+                if (document.documentElement.classList.contains('tema-light')) {
+                    icon.className = 'fa-solid fa-sun';
+                } else {
+                    icon.className = 'fa-solid fa-moon';
+                }
+            }
+            
+            // Seteaza icon-ul corect initial
+            updateIcon();
+            
+            btn.addEventListener('click', function() {
+                document.documentElement.classList.toggle('tema-light');
+                if (document.documentElement.classList.contains('tema-light')) {
+                    localStorage.setItem('tema', 'light');
+                } else {
+                    localStorage.setItem('tema', 'dark');
+                }
+                updateIcon();
+            });
+        })();
+    </script>
 </header>

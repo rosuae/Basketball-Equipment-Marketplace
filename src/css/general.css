@@ -22,6 +22,15 @@ body {
     font-family: "Boldonse", system-ui;
 }
 
+html.tema-light body {
+    --culoare-fundal: #f5f5f5;
+    --culoare-contur: #8B6914;
+    --culoare-text: #1C1C1C;
+    --culoare-hover: #e0e0e0;
+    --culoare-border: #D21033;
+    --culoare-link-vizitat: #a00d28;
+}
+
 main,
 header,
 footer {

@@ -1,25 +1,14 @@
-<%# ===== galerie-animata: fragment EJS pentru galeria animata de imagini ===== %>
 <%# Identificator cerinta: galerie-animata %>
-<%# Acest fragment randare galeria animata cu un numar par aleator de imagini (6-12). %>
-<%# Imaginile sunt incarcate din JSON-ul galeriei statice, pe acelasi criteriu (timp). %>
-<%# Galeria nu se afiseaza pe ecran mediu si mic (ascunsa prin CSS). %>
-<%# La hover pe galerie, animatia se opreste (animation-play-state: paused). %>
 
-<% if (typeof galerieAnimata !== 'undefined' && Array.isArray(galerieAnimata) && galerieAnimata.length > 0) { %>
-  <%# galerie-animata: containerul principal cu border-image %>
-  <div class="dynamic-gallery-container">
-    <%# galerie-animata: clasa gallery-count-N seteaza animatia corespunzatoare numarului de imagini %>
-    <div class="dynamic-gallery gallery-count-<%= galerieAnimata.length %>">
-      <% galerieAnimata.forEach(function(imagine, index) { %>
-        <%# galerie-animata: fiecare imagine este un .gallery-item cu pozitionare absoluta %>
-        <figure class="gallery-item">
-          <img
-            src="<%= imagine.sursaMare %>"
-            alt="<%= imagine.altText %>"
-            title="<%= imagine.nume %> - <%= imagine.descriere %>"
-          />
-        </figure>
-      <% }); %>
+  <% if (typeof galerieAnimata !=='undefined' && Array.isArray(galerieAnimata) && galerieAnimata.length> 0) { %>
+    <div class="dynamic-gallery-container">
+      <div class="dynamic-gallery gallery-count-<%= galerieAnimata.length %>">
+        <% galerieAnimata.forEach(function(imagine, index) { %>
+          <figure class="gallery-item">
+            <img src="<%= imagine.sursaMare %>" alt="<%= imagine.altText %>"
+              title="<%= imagine.nume %> - <%= imagine.descriere %>" />
+          </figure>
+          <% }); %>
+      </div>
     </div>
-  </div>
-<% } %>
+    <% } %>

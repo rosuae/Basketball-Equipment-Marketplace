@@ -29,11 +29,28 @@ $h6-font-size: 1rem;
 $link-color: #C49A45;
 $link-hover-color: #D21033;
 $btn-border-radius: 0.75rem;
+$btn-border-width: 2px;
 
 $theme-colors: (
   "primary": $primary,
   "dark": $dark,
   "warning": $warning
 );
+
+// Range slider: bulina 50% mai mare decat font-size html (18px) => 27px = 1.6875rem
+$form-range-thumb-width: 1.6875rem;
+$form-range-thumb-bg: $warning;
+$form-range-track-bg: $primary;
+$form-range-thumb-active-bg: lighten($warning, 15%);
+
+// Inputuri
+$input-bg: $dark;
+$input-color: white;
+$input-border-color: $primary;
+$input-focus-border-color: $warning;
+$input-focus-box-shadow: 0 0 0 0.2rem rgba(196, 154, 69, 0.3);
+
+// Floating label
+$form-floating-label-opacity: 0.8;
 
 @import "../../node_modules/bootstrap/scss/bootstrap";

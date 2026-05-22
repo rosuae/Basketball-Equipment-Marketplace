@@ -26,6 +26,11 @@
     <link rel="stylesheet" href="/src/css/general.css" />
     <link rel="stylesheet" href="/src/css/nav.css" />
     <link rel="stylesheet" href="/src/css/print.css" media="print" />
+    <script>
+        if (localStorage.getItem('tema') === 'light') {
+            document.documentElement.classList.add('tema-light');
+        }
+    </script>
 </head>
 
 <body>
@@ -99,6 +104,35 @@
                 </li>
             </ul>
         </nav>
+        <button id="btn-tema" class="btn btn-outline-warning mt-2 ms-3" aria-label="Schimba tema" title="Schimba tema" style="width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+            <i class="fa-solid fa-moon" id="icon-tema" style="font-size: 1.2rem;"></i>
+        </button>
+        <script>
+            (function() {
+                var btn = document.getElementById('btn-tema');
+                var icon = document.getElementById('icon-tema');
+                
+                function updateIcon() {
+                    if (document.documentElement.classList.contains('tema-light')) {
+                        icon.className = 'fa-solid fa-sun';
+                    } else {
+                        icon.className = 'fa-solid fa-moon';
+                    }
+                }
+                
+                updateIcon();
+                
+                btn.addEventListener('click', function() {
+                    document.documentElement.classList.toggle('tema-light');
+                    if (document.documentElement.classList.contains('tema-light')) {
+                        localStorage.setItem('tema', 'light');
+                    } else {
+                        localStorage.setItem('tema', 'dark');
+                    }
+                    updateIcon();
+                });
+            })();
+        </script>
     </header>
     <main>
         <div id="grid-pagina">

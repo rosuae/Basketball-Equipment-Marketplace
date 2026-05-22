@@ -2,28 +2,74 @@
 <html lang="ro">
 <head>
     <%- include('../fragmente/head', { title: locals.title || 'Produse' }) %>
+    <link rel="stylesheet" href="/src/css/produse.css" />
 </head>
 <body>
-    <%- include('../fragmente/header.ejs') %><main>
+    <%- include('../fragmente/header.ejs') %>
+<main class="pagina-produse">
     <h1>Produse Disponibile</h1>
-    <div class="produse-container" style="display: flex; flex-wrap: wrap; gap: 20px;">
+
+    <%
+        // Helper: formatare data in romana
+        const lunileRo = ['Ianuarie','Februarie','Martie','Aprilie','Mai','Iunie','Iulie','August','Septembrie','Octombrie','Noiembrie','Decembrie'];
+        const zileSaptRo = ['Duminica','Luni','Marti','Miercuri','Joi','Vineri','Sambata'];
+        function formateazaDataRo(ds) {
+            if (!ds) return { text: 'N/A', iso: '' };
+            const d = new Date(ds);
+            return { text: d.getDate()+' '+lunileRo[d.getMonth()]+' '+d.getFullYear()+' ['+zileSaptRo[d.getDay()]+']', iso: d.toISOString().split('T')[0] };
+        }
+        function toHtmlId(t) { return t.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase(); }
+    %>
+
+    <%- include('../fragmente/filtre-produse.ejs', {
+        pretMinGlobal: pretMinGlobal,
+        pretMaxGlobal: pretMaxGlobal,
+        subcategoriiSortate: subcategoriiSortate,
+        culoriSortate: culoriSortate,
+        categoriiSortate: categoriiSortate,
+        materialeSortate: materialeSortate,
+        toHtmlId: toHtmlId
+    }) %>
+
+    <div class="produse-lista">
         <% if (locals.produse && produse.length > 0) { %>
             <% for (let prod of produse) { %>
-                <article class="produs-card" style="border: 1px solid #ccc; padding: 15px; border-radius: 8px; width: 250px;">
-                    <img src="<%= prod.imagine %>" alt="<%= prod.nume %>" style="max-width: 100%; height: auto; border-radius: 4px;">
-                    <h2><%= prod.nume %></h2>
-                    <p><strong>Categorie:</strong> <span class="categorie-valoare"><%= prod.categorie_mare %></span></p>
-                    <p><strong>Subcategorie:</strong> <%= prod.subcategorie %></p>
-                    <p><strong>Pret:</strong> <%= prod.pret %> USD</p>
-                    <a href="/produs/<%= prod.id %>" style="display: inline-block; margin-top: 10px; padding: 5px 10px; background: #ff5722; color: white; text-decoration: none; border-radius: 4px;">Vezi detalii</a>
+                <% const dataFmt = formateazaDataRo(prod.data_adaugare); const clasaCateg = (prod.categorie_mare||'').replace(/\s+/g,''); %>
+                <article id="artc-<%= prod.id %>" class="produs-articol <%= clasaCateg %>"
+                         data-nume="<%= prod.nume.toLowerCase() %>" data-pret="<%= prod.pret %>"
+                         data-culoare="<%= prod.culoare_dominanta %>" data-editie="<%= prod.editie_limitata %>"
+                         data-materiale="<%= prod.materiale %>" data-descriere="<%= prod.descriere ? prod.descriere.toLowerCase() : '' %>"
+                         data-subcategorie="<%= prod.subcategorie %>" data-categorie="<%= prod.categorie_mare %>"
+                         data-marime="<%= prod.marime_us || 0 %>">
+                    <h2 class="produs-titlu"><%= prod.nume %></h2>
+                    <div class="produs-coloane">
+                        <div class="produs-col1">
+                            <img src="<%= prod.imagine %>" alt="<%= prod.nume %>" class="produs-imagine" />
+                            <ul class="produs-caracteristici">
+                                <li><span class="caract-nume">Pret:</span><span class="caract-valoare"><%= prod.pret %> USD</span></li>
+                                <% if (prod.marime_us) { %><li><span class="caract-nume">Marime US:</span><span class="caract-valoare"><%= prod.marime_us %></span></li><% } %>
+                                <li><span class="caract-nume">Culoare dominanta:</span><span class="caract-valoare"><%= prod.culoare_dominanta %></span></li>
+                                <li><span class="caract-nume">Materiale:</span><span class="caract-valoare"><%= prod.materiale %></span></li>
+                                <li><span class="caract-nume">Data adaugare:</span><span class="caract-valoare"><time datetime="<%= dataFmt.iso %>"><%= dataFmt.text %></time></span></li>
+                                <li><span class="caract-nume">Editie limitata:</span><span class="caract-valoare"><%= prod.editie_limitata ? 'Da' : 'Nu' %></span></li>
+                            </ul>
+                        </div>
+                        <div class="produs-col2">
+                            <p class="produs-categorie"><span class="caract-nume">Categorie:</span><span class="caract-valoare"><%= prod.categorie_mare %></span></p>
+                            <p class="produs-subcategorie"><span class="caract-nume">Subcategorie:</span><span class="caract-valoare"><%= prod.subcategorie %></span></p>
+                            <div class="produs-descriere"><span class="caract-nume">Descriere:</span><p><%= prod.descriere %></p></div>
+                            <a href="/produs/<%= prod.id %>" class="btn-detalii">Vezi toate detaliile &rarr;</a>
+                        </div>
+                    </div>
                 </article>
             <% } %>
         <% } else { %>
-            <p>Nu exista produse disponibile momentan.</p>
+            <p class="mesaj-gol">Nu exista produse disponibile pentru aceasta selectie.</p>
         <% } %>
     </div>
 </main>
 
+    <script src="/src/js/produse.js"></script>
     <%- include('../fragmente/footer.ejs') %>
 </body>
 </html>
