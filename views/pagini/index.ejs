@@ -9,6 +9,62 @@
 <body>
     <%- include('../fragmente/header') %>
     <main>
+        <% const ofertaCurenta = locals.ofertaCurenta || null; %>
+        <% if (ofertaCurenta) { %>
+            <section id="oferta-vedeta" class="oferta-vedeta" data-finalizare="<%= ofertaCurenta['data-finalizare'] %>">
+                <span class="oferta-vedeta__eticheta">Oferta activa</span>
+                <h2>Reducere de <%= ofertaCurenta.reducere %>% la categoria <%= ofertaCurenta.categorie %></h2>
+                <p>Oferta noua este generata automat si expira in:</p>
+                <p class="oferta-vedeta__cronometru"><span id="cronometru-oferta">00:00:00</span></p>
+            </section>
+        <% } %>
+
+    <script>
+        (function() {
+            var banner = document.getElementById('oferta-vedeta');
+            var timer = document.getElementById('cronometru-oferta');
+            if (!banner || !timer) {
+                return;
+            }
+
+            var finalizare = new Date(banner.getAttribute('data-finalizare')).getTime();
+            var aExpirat = false;
+
+            function formatTime(totalSecunde) {
+                var ore = Math.floor(totalSecunde / 3600);
+                var minute = Math.floor((totalSecunde % 3600) / 60);
+                var secunde = totalSecunde % 60;
+                return [ore, minute, secunde].map(function(part) {
+                    return String(part).padStart(2, '0');
+                }).join(':');
+            }
+
+            function actualizeaza() {
+                var diferenta = Math.max(0, finalizare - Date.now());
+                var secundeRamase = Math.floor(diferenta / 1000);
+
+                if (diferenta <= 10000) {
+                    banner.classList.add('oferta-vedeta--urgenta');
+                } else {
+                    banner.classList.remove('oferta-vedeta--urgenta');
+                }
+
+                timer.textContent = formatTime(secundeRamase);
+
+                if (diferenta === 0 && !aExpirat) {
+                    aExpirat = true;
+                    banner.classList.add('oferta-vedeta--expirata');
+                    timer.textContent = '00:00:00';
+                    setTimeout(function() {
+                        window.location.reload();
+                    }, 1000);
+                }
+            }
+
+            actualizeaza();
+            setInterval(actualizeaza, 1000);
+        })();
+    </script>
         <div id="grid-pagina">
 
             <section id="welcome" class="zona1">

@@ -31,6 +31,46 @@ html.tema-light body {
     --culoare-link-vizitat: #a00d28;
 }
 
+html.tema-sepia body {
+    --culoare-fundal: #f4ecd8;
+    --culoare-contur: #6b4f2a;
+    --culoare-text: #2e2218;
+    --culoare-hover: #e6d7b9;
+    --culoare-border: #8b5e3c;
+    --culoare-link-vizitat: #6d2e1c;
+}
+
+/* ===== Bonus 2: select simplu pentru alegerea temei ===== */
+.theme-switcher {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: 12px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+}
+
+.theme-switcher__label {
+    font-size: 0.95rem;
+    color: var(--culoare-border);
+}
+
+.theme-switcher__select {
+    min-width: 120px;
+    padding: 0.45rem 0.75rem;
+    border-radius: 999px;
+    border: 2px solid var(--culoare-border);
+    background-color: var(--culoare-hover);
+    color: var(--culoare-text);
+    font: inherit;
+    cursor: pointer;
+}
+
+.theme-switcher__select:focus-visible {
+    outline: 3px solid var(--culoare-contur);
+    outline-offset: 2px;
+}
+
 main,
 header,
 footer {

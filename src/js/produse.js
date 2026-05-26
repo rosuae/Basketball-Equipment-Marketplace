@@ -14,11 +14,20 @@ function levenshtein(a, b) {
     return dp[m][n];
 }
 
-// Fuzzy match: substring exact SAU Levenshtein <= 2
+// [Bonus 7] Normalizam textul ca diacriticele sa fie tratate ca echivalent fara diacritice.
+function normalizeText(value) {
+    if (value == null) return '';
+    return String(value)
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+        .trim();
+}
+
 function fuzzyMatch(search, name) {
     if (!search) return true;
-    search = search.toLowerCase().trim();
-    name = name.toLowerCase();
+    search = normalizeText(search);
+    name = normalizeText(name);
     if (name.indexOf(search) !== -1) return true;
     if (search.length >= 3) {
         var words = name.split(/\s+/);
@@ -42,6 +51,8 @@ function fuzzyMatch(search, name) {
     var selectCategorie = document.getElementById('filtru-categorie');
     var matCheckboxes = document.querySelectorAll('.mat-checkbox');
     var articole = Array.from(document.querySelectorAll('.produs-articol'));
+    var mesajFiltrareGol = document.getElementById('mesaj-filtrare-gol');
+    var outputNumarProduse = document.getElementById('nr-produse-afisate');
 
     // Salvam ordinea initiala pentru resetare
     var articoleInitiale = Array.from(document.querySelectorAll('.produs-articol'));
@@ -55,6 +66,55 @@ function fuzzyMatch(search, name) {
     var btnSortDesc = document.getElementById('btn-sort-desc');
     var btnCalcul = document.getElementById('btn-calcul');
 
+    // [Bonus 14] Marcheaza cel mai ieftin produs vizibil din fiecare categorie.
+    function marcheazaCeleMaiIeftine() {
+        var produsePeCategorie = {};
+
+        articole.forEach(function (art) {
+            art.classList.remove('produs-articol--ieftin');
+            var badge = art.querySelector('.badge-ieftin');
+            if (badge) {
+                badge.classList.add('badge-ieftin--ascuns');
+            }
+
+            if (art.style.display === 'none') return;
+
+            var categorie = art.getAttribute('data-categorie') || '';
+            var pret = parseFloat(art.getAttribute('data-pret')) || Infinity;
+
+            if (!produsePeCategorie[categorie] || pret < produsePeCategorie[categorie].pret) {
+                produsePeCategorie[categorie] = { pret: pret, articol: art };
+            }
+        });
+
+        Object.keys(produsePeCategorie).forEach(function (categorie) {
+            var articolIeftin = produsePeCategorie[categorie].articol;
+            articolIeftin.classList.add('produs-articol--ieftin');
+            var badgeIeftin = articolIeftin.querySelector('.badge-ieftin');
+            if (badgeIeftin) {
+                badgeIeftin.classList.remove('badge-ieftin--ascuns');
+            }
+        });
+    }
+
+    // [Bonus 3 + Bonus 15] Actualizeaza mesajul de gol si numarul produselor afisate.
+    function actualizeazaStatusProduse() {
+        var vizibile = 0;
+        articole.forEach(function (art) {
+            if (art.style.display !== 'none') vizibile++;
+        });
+
+        if (outputNumarProduse) {
+            outputNumarProduse.textContent = vizibile;
+        }
+
+        if (mesajFiltrareGol) {
+            mesajFiltrareGol.style.display = (articole.length > 0 && vizibile === 0) ? 'block' : 'none';
+        }
+
+        marcheazaCeleMaiIeftine();
+    }
+
     // Actualizeaza valoarea range in timp real (afisare vizuala doar)
     if (inputPret) {
         inputPret.addEventListener('input', function () {
@@ -62,30 +122,28 @@ function fuzzyMatch(search, name) {
         });
     }
 
-    // --- VALIDARE INPUTURI ---
-    function valideazaInputuri() {
+    // [Etapa 6] format-entitati - Butoane. Operațiile efective de filtrare/sortare/calculare (Validare)
+    function valideazaInputuri(faraAlert) {
         var isValid = true;
         var mesaj = "";
 
-        // Resetam clasele is-invalid anterior setate
         if (inputNume) inputNume.classList.remove('is-invalid');
         if (textareaDescriere) textareaDescriere.classList.remove('is-invalid');
 
-        // Regula 1: Numele nu are voie sa contina cifre (nu are sens pt aplicatie)
+        // fara cifre
         if (inputNume && /\d/.test(inputNume.value)) {
             inputNume.classList.add('is-invalid');
             mesaj += "Numele produsului nu poate contine cifre!\n";
             isValid = false;
         }
 
-        // Regula 2: Daca descrierea e completata, trebuie sa aiba macar 3 caractere
         if (textareaDescriere && textareaDescriere.value.trim().length > 0 && textareaDescriere.value.trim().length < 3) {
             textareaDescriere.classList.add('is-invalid');
             mesaj += "Daca completati descrierea, cautati macar dupa 3 caractere!\n";
             isValid = false;
         }
 
-        if (!isValid) {
+        if (!isValid && !faraAlert) {
             alert("Operatiune anulata:\n\n" + mesaj);
         }
 
@@ -111,16 +169,16 @@ function fuzzyMatch(search, name) {
         });
     }
 
-    // --- FILTRARE ---
-    function aplicaFiltre() {
-        if (!valideazaInputuri()) return;
+    // [Etapa 6] format-entitati - Butoane. Operațiile efective de filtrare/sortare/calculare (Filtrare)
+    function aplicaFiltre(faraAlert) {
+        if (!valideazaInputuri(faraAlert)) return;
 
-        var textNume = inputNume ? inputNume.value.trim() : '';
+        var textNume = inputNume ? normalizeText(inputNume.value) : '';
         var pretMax = inputPret ? parseFloat(inputPret.value) : Infinity;
-        var subcategVal = inputSubcateg ? inputSubcateg.value.trim().toLowerCase() : '';
+        var subcategVal = inputSubcateg ? normalizeText(inputSubcateg.value) : '';
         var editieChecked = document.querySelector('input[name="filtru-editie"]:checked');
         var editieVal = editieChecked ? editieChecked.value : 'oricare';
-        var descriereVal = textareaDescriere ? textareaDescriere.value.trim().toLowerCase() : '';
+        var descriereVal = textareaDescriere ? normalizeText(textareaDescriere.value) : '';
         var culoareVal = selectCuloare ? selectCuloare.value : '';
 
         var categoriiSel = [];
@@ -141,28 +199,71 @@ function fuzzyMatch(search, name) {
 
         articole.forEach(function (art) {
             var viz = true;
-            var numeArt = art.getAttribute('data-nume') || '';
+            var numeArt = normalizeText(art.getAttribute('data-nume') || '');
             var pretArt = parseFloat(art.getAttribute('data-pret')) || 0;
-            var matArt = (art.getAttribute('data-materiale') || '').split(',').map(function (m) { return m.trim().toLowerCase(); });
+            var matArt = (art.getAttribute('data-materiale') || '').split(',').map(function (m) { return normalizeText(m); });
 
             if (textNume && !fuzzyMatch(textNume, numeArt)) viz = false;
             if (pretArt > pretMax) viz = false;
-            if (subcategVal && (art.getAttribute('data-subcategorie') || '').toLowerCase().indexOf(subcategVal) === -1) viz = false;
+            if (subcategVal && normalizeText(art.getAttribute('data-subcategorie') || '').indexOf(subcategVal) === -1) viz = false;
             if (editieVal === 'da' && art.getAttribute('data-editie') !== 'true') viz = false;
             if (editieVal === 'nu' && art.getAttribute('data-editie') !== 'false') viz = false;
             for (var a = 0; a < materialeAre.length && viz; a++) { if (matArt.indexOf(materialeAre[a]) === -1) viz = false; }
             for (var n = 0; n < materialeNuAre.length && viz; n++) { if (matArt.indexOf(materialeNuAre[n]) !== -1) viz = false; }
-            if (descriereVal && (art.getAttribute('data-descriere') || '').indexOf(descriereVal) === -1) viz = false;
+            if (descriereVal && normalizeText(art.getAttribute('data-descriere') || '').indexOf(descriereVal) === -1) viz = false;
             if (culoareVal && (art.getAttribute('data-culoare') || '') !== culoareVal) viz = false;
             if (categoriiSel.length > 0 && categoriiSel.indexOf(art.getAttribute('data-categorie') || '') === -1) viz = false;
 
             art.style.display = viz ? '' : 'none';
         });
+
+        actualizeazaStatusProduse();
     }
 
-    if (btnFiltreaza) btnFiltreaza.addEventListener('click', aplicaFiltre);
+    // bonus 4 
 
-    // --- RESETARE ---
+    function leagaFiltrareAutomata() {
+        var controaleInput = [inputNume, inputPret, inputSubcateg, textareaDescriere];
+        controaleInput.forEach(function (control) {
+            if (!control) return;
+            control.addEventListener('input', function () {
+                aplicaFiltre(true);
+            });
+        });
+
+        [selectCuloare, selectCategorie].forEach(function (control) {
+            if (!control) return;
+            control.addEventListener('change', function () {
+                aplicaFiltre(true);
+            });
+        });
+
+        document.querySelectorAll('input[name="filtru-editie"]').forEach(function (radio) {
+            radio.addEventListener('change', function () {
+                aplicaFiltre(true);
+            });
+        });
+
+        matCheckboxes.forEach(function (cb) {
+            cb.addEventListener('change', function () {
+                aplicaFiltre(true);
+            });
+        });
+
+        document.querySelectorAll('.mat-radio').forEach(function (radio) {
+            radio.addEventListener('change', function () {
+                aplicaFiltre(true);
+            });
+        });
+    }
+
+    leagaFiltrareAutomata();
+
+    if (btnFiltreaza) btnFiltreaza.addEventListener('click', function () {
+        aplicaFiltre(false);
+    });
+
+    // [Etapa 6] format-entitati - Butoane. Operațiile efective de filtrare/sortare/calculare (Resetare)
     if (btnReset) {
         btnReset.addEventListener('click', function () {
             // Confirmare inainte de resetare
@@ -185,11 +286,13 @@ function fuzzyMatch(search, name) {
                     art.style.display = '';
                     containerProduse.appendChild(art);
                 });
+
+                actualizeazaStatusProduse();
             }
         });
     }
 
-    // --- SORTARE ---
+    // [Etapa 6] format-entitati - Butoane. Operațiile efective de filtrare/sortare/calculare (Sortare)
     function sorteaza(ascendent) {
         if (!valideazaInputuri()) return;
 
@@ -213,12 +316,14 @@ function fuzzyMatch(search, name) {
         articole.forEach(function (art) {
             containerProduse.appendChild(art);
         });
+
+        actualizeazaStatusProduse();
     }
 
     if (btnSortAsc) btnSortAsc.addEventListener('click', function () { sorteaza(true); });
     if (btnSortDesc) btnSortDesc.addEventListener('click', function () { sorteaza(false); });
 
-    // --- CALCUL ---
+    // [Etapa 6] format-entitati - Butoane. Operațiile efective de filtrare/sortare/calculare (Calcul)
     if (btnCalcul) {
         btnCalcul.addEventListener('click', function () {
             if (!valideazaInputuri()) return;
@@ -239,7 +344,7 @@ function fuzzyMatch(search, name) {
             infoDiv.style.bottom = '20px';
             infoDiv.style.left = '50%';
             infoDiv.style.transform = 'translateX(-50%)';
-            infoDiv.style.backgroundColor = '#C49A45'; // Gold
+            infoDiv.style.backgroundColor = '#C49A45';
             infoDiv.style.color = '#000';
             infoDiv.style.padding = '15px 25px';
             infoDiv.style.borderRadius = '8px';
@@ -260,5 +365,7 @@ function fuzzyMatch(search, name) {
             }, 2000);
         });
     }
+
+    actualizeazaStatusProduse();
 
 })();

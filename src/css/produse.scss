@@ -1,4 +1,4 @@
-$border: var(--culoare-border);
+ $border: var(--culoare-border);
 $gold: var(--culoare-contur);
 $bg-dark: var(--culoare-fundal);
 $bg-card: var(--culoare-hover);
@@ -85,6 +85,11 @@ $text: var(--culoare-text);
     &:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(210, 16, 51, 0.2); }
 }
 
+.produs-articol--oferta-curenta {
+    border-color: #fca311;
+    box-shadow: 0 0 0 3px rgba(252, 163, 17, 0.12), 0 8px 24px rgba(252, 163, 17, 0.14);
+}
+
 .produs-titlu {
     font-size: 1.3rem; margin-bottom: 15px;
     padding-bottom: 10px; border-bottom: 1px solid $border;
@@ -133,6 +138,62 @@ $text: var(--culoare-text);
 .mesaj-gol {
     text-align: center; padding: 40px; font-size: 1.1rem;
     color: $gold; border: 2px dashed $border; border-radius: 12px; flex: 1 1 100%;
+}
+
+/* [Bonus 3 + Bonus 15] Status filtrare si numar produse. */
+.mesaj-filtrare { display: none; }
+
+.produse-count {
+    text-align: center;
+    margin: 0 0 20px;
+    color: $gold;
+    font-size: 0.95rem;
+}
+
+/* [Bonus 14] Badge pentru produsul cel mai ieftin din categorie. */
+.badge-ieftin {
+    display: inline-block;
+    margin: 0 0 12px;
+    padding: 0.45rem 0.8rem;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #ffd166, #fca311);
+    color: #1f1300;
+    font-weight: 700;
+    font-size: 0.82rem;
+    letter-spacing: 0.02em;
+    border: 2px solid #8a5a00;
+    box-shadow: 0 4px 12px rgba(252, 163, 17, 0.28);
+}
+
+.badge-ieftin--ascuns {
+    display: none;
+}
+
+.badge-oferta-activa {
+    display: inline-block;
+    margin: 0 0 12px;
+    padding: 0.4rem 0.75rem;
+    border-radius: 999px;
+    background: #0ea5e9;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 0.8rem;
+    border: 1px solid #0b6aa7;
+}
+
+.produs-pret-vechi {
+    color: #b5b5b5;
+    text-decoration: line-through;
+    margin-right: 0.5rem;
+}
+
+.produs-pret-redus {
+    color: #2a9d8f;
+}
+
+.produs-articol--ieftin {
+    border-color: #fca311;
+    box-shadow: 0 0 0 3px rgba(252, 163, 17, 0.12), 0 10px 28px rgba(252, 163, 17, 0.14);
 }
 
 .pagina-produse h1 { text-align: center; margin-bottom: 25px; }

@@ -15,6 +15,183 @@ const client = new pg.Client({
 });
 // Cache pentru valorile ENUM-ului categ_produs (se incarca o singura data la pornire)
 let categoriiCache = [];
+const CALE_OFERTE_JSON = path.join(__dirname, 'src', 'json', 'oferte.json');
+const DURATA_OFERTE_MS = 2 * 60 * 1000;
+const T2_STERGERE_OFERTE_MS = 10 * 60 * 1000;
+const VALORI_REDUCERE_OFERTE = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50];
+let timerGenerareOferta = null;
+
+function normalizeText(value) {
+  if (value == null) {
+    return '';
+  }
+
+  return String(value)
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim();
+}
+
+function asiguraFisierOferte() {
+  fs.mkdirSync(path.dirname(CALE_OFERTE_JSON), { recursive: true });
+  if (!fs.existsSync(CALE_OFERTE_JSON)) {
+    fs.writeFileSync(CALE_OFERTE_JSON, JSON.stringify({ oferte: [] }, null, 2));
+  }
+}
+
+function citesteOferteDinFisier() {
+  asiguraFisierOferte();
+
+  try {
+    const continut = fs.readFileSync(CALE_OFERTE_JSON, 'utf-8');
+    const date = JSON.parse(continut);
+    if (!date || !Array.isArray(date.oferte)) {
+      return { oferte: [] };
+    }
+    return date;
+  } catch (err) {
+    console.error('[Oferte] Nu s-a putut citi fisierul JSON:', err.message);
+    return { oferte: [] };
+  }
+}
+
+function scrieOferteInFisier(dateOferte) {
+  asiguraFisierOferte();
+  fs.writeFileSync(CALE_OFERTE_JSON, JSON.stringify(dateOferte, null, 2));
+}
+
+function ofertaEsteExpirata(oferta, acum = Date.now()) {
+  if (!oferta || !oferta['data-finalizare']) {
+    return true;
+  }
+
+  return new Date(oferta['data-finalizare']).getTime() <= acum;
+}
+
+function oferaCategoriaAleatoare(categorieAnterioara) {
+  if (!categoriiCache.length) {
+    return null;
+  }
+
+  const categoriiDisponibile = categoriiCache.filter((categorie) => normalizeText(categorie) !== normalizeText(categorieAnterioara));
+  const sursa = categoriiDisponibile.length > 0 ? categoriiDisponibile : categoriiCache;
+  return sursa[Math.floor(Math.random() * sursa.length)];
+}
+
+function creeazaOfertaNoua(categorieAnterioara) {
+  const categorie = oferaCategoriaAleatoare(categorieAnterioara);
+  if (!categorie) {
+    return null;
+  }
+
+  const reducere = VALORI_REDUCERE_OFERTE[Math.floor(Math.random() * VALORI_REDUCERE_OFERTE.length)];
+  const momentInceput = new Date();
+  const momentFinal = new Date(momentInceput.getTime() + DURATA_OFERTE_MS);
+
+  return {
+    categorie,
+    'data-incepere': momentInceput.toISOString(),
+    'data-finalizare': momentFinal.toISOString(),
+    reducere,
+  };
+}
+
+function curataOferteVechi(dateOferte, acum = Date.now()) {
+  if (!dateOferte || !Array.isArray(dateOferte.oferte)) {
+    return { oferte: [] };
+  }
+
+  dateOferte.oferte = dateOferte.oferte.filter((oferta, index) => {
+    const finalizare = oferta && oferta['data-finalizare'] ? new Date(oferta['data-finalizare']).getTime() : 0;
+    if (index === 0) {
+      return true;
+    }
+
+    return acum - finalizare <= T2_STERGERE_OFERTE_MS;
+  });
+
+  return dateOferte;
+}
+
+function programeazaGenerareaUrmatoareiOferte() {
+  if (timerGenerareOferta) {
+    clearTimeout(timerGenerareOferta);
+    timerGenerareOferta = null;
+  }
+
+  const dateOferte = citesteOferteDinFisier();
+  const ofertaCurenta = dateOferte.oferte[0];
+  if (!ofertaCurenta || ofertaEsteExpirata(ofertaCurenta)) {
+    return genereazaSiSalveazaOfertaNoua();
+  }
+
+  const intervalRamas = new Date(ofertaCurenta['data-finalizare']).getTime() - Date.now();
+  timerGenerareOferta = setTimeout(() => {
+    genereazaSiSalveazaOfertaNoua();
+  }, Math.max(intervalRamas, 1000));
+
+  return dateOferte;
+}
+
+function genereazaSiSalveazaOfertaNoua() {
+  const dateOferte = curataOferteVechi(citesteOferteDinFisier());
+  const ofertaCurenta = dateOferte.oferte[0];
+  const ofertaNoua = creeazaOfertaNoua(ofertaCurenta ? ofertaCurenta.categorie : '');
+
+  if (!ofertaNoua) {
+    console.log('[Oferte] Nu exista categorii disponibile pentru generarea unei oferte.');
+    return dateOferte;
+  }
+
+  dateOferte.oferte.unshift(ofertaNoua);
+  scrieOferteInFisier(dateOferte);
+
+  const intervalRamas = new Date(ofertaNoua['data-finalizare']).getTime() - Date.now();
+  if (timerGenerareOferta) {
+    clearTimeout(timerGenerareOferta);
+  }
+  timerGenerareOferta = setTimeout(() => {
+    genereazaSiSalveazaOfertaNoua();
+  }, Math.max(intervalRamas, 1000));
+
+  console.log(`[Oferte] Generata oferta noua pentru categoria ${ofertaNoua.categorie} cu reducere ${ofertaNoua.reducere}%.`);
+  return dateOferte;
+}
+
+function obtineDateOferteCurente() {
+  const dateOferte = curataOferteVechi(citesteOferteDinFisier());
+  const ofertaCurenta = dateOferte.oferte[0];
+
+  if (!ofertaCurenta || ofertaEsteExpirata(ofertaCurenta)) {
+    return genereazaSiSalveazaOfertaNoua();
+  }
+
+  return dateOferte;
+}
+
+function decorateazaProduseCuOferta(produse, ofertaCurenta) {
+  if (!Array.isArray(produse) || !ofertaCurenta) {
+    return produse;
+  }
+
+  const categorieOferta = normalizeText(ofertaCurenta.categorie);
+  const reducere = Number(ofertaCurenta.reducere) || 0;
+
+  return produse.map((produs) => {
+    const areOferta = normalizeText(produs.categorie_mare) === categorieOferta;
+    const pretInitial = Number(produs.pret) || 0;
+    const pretRedus = areOferta ? +(pretInitial * (1 - reducere / 100)).toFixed(2) : pretInitial;
+
+    return {
+      ...produs,
+      are_oferta_curenta: areOferta,
+      reducere_curenta: areOferta ? reducere : 0,
+      pret_initial_curent: pretInitial,
+      pret_redus_curent: pretRedus,
+    };
+  });
+}
 
 async function incarcaCategoriiEnum() {
   try {
@@ -30,6 +207,9 @@ client.connect()
   .then(() => {
     console.log('Conectat la baza de date');
     return incarcaCategoriiEnum();
+  })
+  .then(() => {
+    programeazaGenerareaUrmatoareiOferte();
   })
   .catch(err => console.error('Eroare conectare baza de date:', err));
 
@@ -649,6 +829,7 @@ server.get(['/', '/index', '/home'], (req, res) => {
   const dateGalerie = obtineDateGaleriePentruRandare();
 
   const galerieAnimata = obtineDateGalerieAnimata();
+  const dateOferte = obtineDateOferteCurente();
 
   try {
     compileazaScss('galerie-animata.scss', 'galerie-animata.css');
@@ -663,12 +844,17 @@ server.get(['/', '/index', '/home'], (req, res) => {
     galerieStatica: dateGalerie.galerieStatica,
     intervalGalerie: dateGalerie.intervalGalerie,
     galerieAnimata: galerieAnimata,
+    ofertaCurenta: dateOferte.oferte[0] || null,
+    istoricOferte: dateOferte.oferte.slice(0, 5),
   });
 });
 
+// [Etapa 6] format-entitati - Pagină produse
 server.get('/produse', async (req, res) => {
   try {
     const categorieCeruta = req.query.categorie;
+    const dateOferte = obtineDateOferteCurente();
+    const ofertaCurenta = dateOferte.oferte[0] || null;
     let querySQL, params;
 
     if (categorieCeruta && categorieCeruta !== 'toate' && categoriiCache.includes(categorieCeruta)) {
@@ -680,7 +866,10 @@ server.get('/produse', async (req, res) => {
     }
 
     const result = await client.query(querySQL, params);
+    const produseCuOferta = decorateazaProduseCuOferta(result.rows, ofertaCurenta);
 
+    // [Bonus 1] (Total 0.5p - 5 tipuri distincte de filtre generate din baza de date)
+    // Se interogheaza baza de date pentru limitele si optiunile filtrelor (pret, subcategorie, culori, materiale, categorii ENUM).
     const rezPret = await client.query('SELECT MIN(pret) AS minim, MAX(pret) AS maxim FROM produse');
     const rezSubcat = await client.query('SELECT DISTINCT subcategorie FROM produse WHERE subcategorie IS NOT NULL ORDER BY subcategorie');
     const rezCulori = await client.query('SELECT DISTINCT culoare_dominanta FROM produse WHERE culoare_dominanta IS NOT NULL ORDER BY culoare_dominanta');
@@ -696,14 +885,15 @@ server.get('/produse', async (req, res) => {
 
     res.render('pagini/produse', {
       title: categorieCeruta && categorieCeruta !== 'toate' ? `Produse - ${categorieCeruta}` : 'Produse',
-      produse: result.rows,
+      produse: produseCuOferta,
       categorie_curenta: categorieCeruta || 'toate',
       pretMinGlobal,
       pretMaxGlobal,
       subcategoriiSortate,
       culoriSortate,
       materialeSortate,
-      categoriiSortate
+      categoriiSortate,
+      ofertaCurenta,
     });
   } catch (err) {
     console.error(err);
@@ -711,11 +901,23 @@ server.get('/produse', async (req, res) => {
   }
 });
 
+server.get('/oferte', (req, res) => {
+  const dateOferte = obtineDateOferteCurente();
+  res.render('pagini/oferte', {
+    title: 'Oferte active',
+    ofertaCurenta: dateOferte.oferte[0] || null,
+    istoricOferte: dateOferte.oferte.slice(0, 10),
+  });
+});
+
+// [Etapa 6] format-entitati - Pagină produs unic
 server.get('/produs/:id', (req, res) => {
   const id = parseInt(req.params.id);
   if (isNaN(id)) {
     return afisareEroare(res, 400, "ID produs invalid");
   }
+  const dateOferte = obtineDateOferteCurente();
+  const ofertaCurenta = dateOferte.oferte[0] || null;
   client.query('SELECT * FROM produse WHERE id = $1', [id], (err, result) => {
     if (err) {
       console.error(err);
@@ -726,8 +928,9 @@ server.get('/produs/:id', (req, res) => {
     }
 
     // Regula stricta: Transmiterea datelor prin obiectul locals
-    res.locals.produs = result.rows[0];
-    res.render('pagini/produs', { title: res.locals.produs.nume });
+    const produsDecorat = decorateazaProduseCuOferta([result.rows[0]], ofertaCurenta)[0];
+    res.locals.produs = produsDecorat;
+    res.render('pagini/produs', { title: res.locals.produs.nume, ofertaCurenta });
   });
 });
 
@@ -750,6 +953,8 @@ server.get('/:pagina', (req, res) => {
     {
       galerieStatica: [],
       intervalGalerie: obtineIntervalGalerieDinOra(new Date().getHours()),
+      ofertaCurenta: obtineDateOferteCurente().oferte[0] || null,
+      istoricOferte: obtineDateOferteCurente().oferte.slice(0, 5),
     },
     function (eroare, rezultatRandare) {
       if (eroare) {

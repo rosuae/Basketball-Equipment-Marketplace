@@ -54,3 +54,90 @@ $input-focus-box-shadow: 0 0 0 0.2rem rgba(196, 154, 69, 0.3);
 $form-floating-label-opacity: 0.8;
 
 @import "../../node_modules/bootstrap/scss/bootstrap";
+
+/* [Bonus 12] Banner pentru oferta activa si cronometrul de pe prima pagina. */
+.oferta-vedeta {
+  margin: 0 0 1.5rem;
+  padding: 1.25rem 1.5rem;
+  border: 2px solid #fca311;
+  border-radius: 1rem;
+  background: linear-gradient(135deg, #1c1c1c, #2f2f2f 55%, #4b2e00);
+  color: #fff3d1;
+  box-shadow: 0 12px 30px rgba(252, 163, 17, 0.2);
+}
+
+.oferta-vedeta__eticheta {
+  display: inline-block;
+  margin-bottom: 0.75rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  background: #fca311;
+  color: #1f1300;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.oferta-vedeta h2 {
+  margin-bottom: 0.5rem;
+  color: #ffd166;
+}
+
+.oferta-vedeta__cronometru {
+  margin-top: 0.75rem;
+  font-size: 1.45rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.oferta-vedeta--urgenta .oferta-vedeta__cronometru,
+.oferta-vedeta--urgenta #cronometru-oferta {
+  color: #ff6b6b;
+  animation: oferta-pulse 1s infinite;
+}
+
+.oferta-vedeta--expirata {
+  opacity: 0.7;
+}
+
+@keyframes oferta-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.04); }
+}
+
+.oferta-pagina {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+/* [Bonus 12] Stiluri folosite si pe pagina produsului unic. */
+.produs-pret-vechi {
+  color: #b5b5b5;
+  text-decoration: line-through;
+  margin-right: 0.5rem;
+}
+
+.produs-pret-redus {
+  color: #2a9d8f;
+}
+
+.badge-oferta-activa {
+  display: inline-block;
+  margin: 0 0 12px;
+  padding: 0.4rem 0.75rem;
+  border-radius: 999px;
+  background: #0ea5e9;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.8rem;
+  border: 1px solid #0b6aa7;
+}
+
+.istoric-oferte {
+  margin-top: 1.5rem;
+}
+
+.istoric-oferte ul {
+  padding-left: 1.2rem;
+}

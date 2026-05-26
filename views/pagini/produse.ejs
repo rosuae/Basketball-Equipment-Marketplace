@@ -6,8 +6,11 @@
 </head>
 <body>
     <%- include('../fragmente/header.ejs') %>
+<!-- [Etapa 6] format-entitati - Pagină produse / Format afișare produse -->
 <main class="pagina-produse">
     <h1>Produse Disponibile</h1>
+    <!-- [Bonus 15] Afisare numar produse (se actualizeaza la filtrare). -->
+    <p class="produse-count">Produse afisate: <span id="nr-produse-afisate"><%= (locals.produse || []).length %></span></p>
 
     <%
         // Helper: formatare data in romana
@@ -21,6 +24,7 @@
         function toHtmlId(t) { return t.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase(); }
     %>
 
+    <!-- [Etapa 6] format-entitati - Filtre. Inputuri -->
     <%- include('../fragmente/filtre-produse.ejs', {
         pretMinGlobal: pretMinGlobal,
         pretMaxGlobal: pretMaxGlobal,
@@ -32,21 +36,33 @@
     }) %>
 
     <div class="produse-lista">
+        <!-- [Bonus 3] Mesaj cand filtrarea nu returneaza rezultate. -->
+        <p id="mesaj-filtrare-gol" class="mesaj-gol mesaj-filtrare">Nu exista produse conform filtrarii curente.</p>
         <% if (locals.produse && produse.length > 0) { %>
             <% for (let prod of produse) { %>
                 <% const dataFmt = formateazaDataRo(prod.data_adaugare); const clasaCateg = (prod.categorie_mare||'').replace(/\s+/g,''); %>
-                <article id="artc-<%= prod.id %>" class="produs-articol <%= clasaCateg %>"
+                <article id="artc-<%= prod.id %>" class="produs-articol <%= clasaCateg %> <%= prod.are_oferta_curenta ? 'produs-articol--oferta-curenta' : '' %>"
                          data-nume="<%= prod.nume.toLowerCase() %>" data-pret="<%= prod.pret %>"
                          data-culoare="<%= prod.culoare_dominanta %>" data-editie="<%= prod.editie_limitata %>"
                          data-materiale="<%= prod.materiale %>" data-descriere="<%= prod.descriere ? prod.descriere.toLowerCase() : '' %>"
                          data-subcategorie="<%= prod.subcategorie %>" data-categorie="<%= prod.categorie_mare %>"
                          data-marime="<%= prod.marime_us || 0 %>">
                     <h2 class="produs-titlu"><%= prod.nume %></h2>
+                    <!-- [Bonus 14] Eticheta pentru cel mai ieftin produs din categorie. -->
+                    <p class="badge-ieftin badge-ieftin--ascuns" aria-live="polite">Cel mai ieftin produs din aceasta categorie</p>
+                    <% if (prod.are_oferta_curenta) { %>
+                        <!-- [Bonus 12] Afisare oferta activa pentru categoria produsului. -->
+                        <p class="badge-oferta-activa">Oferta activa: -<%= prod.reducere_curenta %>%</p>
+                    <% } %>
                     <div class="produs-coloane">
                         <div class="produs-col1">
-                            <img src="<%= prod.imagine %>" alt="<%= prod.nume %>" class="produs-imagine" />
+                            <img src="/src<%= prod.imagine %>" alt="<%= prod.nume %>" class="produs-imagine" />
                             <ul class="produs-caracteristici">
-                                <li><span class="caract-nume">Pret:</span><span class="caract-valoare"><%= prod.pret %> USD</span></li>
+                                <% if (prod.are_oferta_curenta) { %>
+                                    <li><span class="caract-nume">Pret:</span><span class="caract-valoare produs-pret-redus"><span class="produs-pret-vechi"><%= Number(prod.pret_initial_curent).toFixed(2) %> USD</span> <strong><%= Number(prod.pret_redus_curent).toFixed(2) %> USD</strong></span></li>
+                                <% } else { %>
+                                    <li><span class="caract-nume">Pret:</span><span class="caract-valoare"><%= Number(prod.pret).toFixed(2) %> USD</span></li>
+                                <% } %>
                                 <% if (prod.marime_us) { %><li><span class="caract-nume">Marime US:</span><span class="caract-valoare"><%= prod.marime_us %></span></li><% } %>
                                 <li><span class="caract-nume">Culoare dominanta:</span><span class="caract-valoare"><%= prod.culoare_dominanta %></span></li>
                                 <li><span class="caract-nume">Materiale:</span><span class="caract-valoare"><%= prod.materiale %></span></li>

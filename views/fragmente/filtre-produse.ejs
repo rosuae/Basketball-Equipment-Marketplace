@@ -1,3 +1,4 @@
+<!-- [Etapa 6] format-entitati - Filtre. Inputuri (și Cerințe specifice filtre) -->
 <section class="filtrare-produse">
     <h2>Filtrare produse</h2>
     <div class="row g-3">
@@ -12,6 +13,7 @@
         <div class="col-md-6 col-12">
             <label for="filtru-subcategorie" class="form-label">Subcategorie:</label>
             <input type="text" id="filtru-subcategorie" class="form-control" list="lista-subcategorii" placeholder="Alege sau scrie..." />
+            <!-- [Bonus 1] generare optiuni datalist (subcategorie) pe baza interogarii din baza de date -->
             <datalist id="lista-subcategorii">
                 <% for (let sub of subcategoriiSortate) { %>
                     <option value="<%= sub %>"></option>
@@ -24,6 +26,7 @@
             <label for="filtru-pret" class="form-label">Pret maxim:</label>
             <div class="range-container d-flex align-items-center gap-2">
                 <span class="range-val"><%= pretMinGlobal %></span>
+                <!-- [Etapa 6] format-entitati - Bonus 1: generare atribute din baza de date -->
                 <input type="range" id="filtru-pret" class="form-range flex-grow-1" min="<%= pretMinGlobal %>" max="<%= pretMaxGlobal %>" value="<%= pretMaxGlobal %>" step="0.50" />
                 <span class="range-val"><%= pretMaxGlobal %></span>
                 <span class="range-current">(<span id="pret-curent"><%= pretMaxGlobal %></span> USD)</span>
@@ -48,6 +51,7 @@
         <%# 7. Select simplu — Culoare %>
         <div class="col-md-6 col-12">
             <label for="filtru-culoare" class="form-label">Culoare dominanta:</label>
+            <!-- [Bonus 1] generare optiuni select (culoare) din baza de date -->
             <select id="filtru-culoare" class="form-select">
                 <option value="" selected>Oricare</option>
                 <% for (let c of culoriSortate) { %>
@@ -68,6 +72,7 @@
         <%# 8. Select multiplu — Categorie %>
         <div class="col-md-6 col-12">
             <label for="filtru-categorie" class="form-label">Categorii (selectie multipla):</label>
+            <!-- [Bonus 1] generare optiuni select multiplu (categorie) din tipul ENUM din baza de date -->
             <select id="filtru-categorie" class="form-select" multiple size="<%= Math.min(categoriiSortate.length, 5) %>">
                 <% for (let cat of categoriiSortate) { %>
                     <option value="<%= cat %>"><%= cat %></option>
@@ -81,6 +86,7 @@
     <fieldset class="filtru-grup filtru-fieldset filtru-materiale-fieldset mt-3">
         <legend>Filtrare dupa materiale:</legend>
         <small class="hint-text form-text">Bifeaza materialele. "Are" = produsul contine, "Nu are" = produsul nu contine. Nebifate = ignorate.</small>
+        <!-- [Bonus 1] generare checkbox-uri materiale extrase direct din sirurile separate prin virgula din baza de date -->
         <div class="materiale-grid">
             <% for (let mat of materialeSortate) { %>
                 <% const matId = toHtmlId(mat); %>
@@ -99,6 +105,7 @@
     </fieldset>
 
     <%# ====== BUTOANE ACTIUNE ====== %>
+    <!-- [Etapa 6] format-entitati - Butoane. Operațiile efective de filtrare/sortare/calculare -->
     <div class="butoane-actiune d-flex flex-wrap gap-2 mt-3 pt-3 border-top border-secondary">
         <button id="btn-filtreaza" class="btn btn-primary"><i class="bi bi-funnel-fill"></i> <span class="d-none d-md-inline">Filtreaza</span></button>
         <button id="btn-reset" class="btn btn-outline-primary"><i class="bi bi-arrow-counterclockwise"></i> <span class="d-none d-md-inline">Reseteaza</span></button>

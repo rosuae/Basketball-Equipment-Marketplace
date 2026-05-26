@@ -31,7 +31,13 @@
 		<link rel="stylesheet" href="/src/css/galerie-animata.css" />
 		<link rel="stylesheet" href="/src/css/print.css" media="print" />
 		<script>
-			if (localStorage.getItem('tema') === 'light') {
-				document.documentElement.classList.add('tema-light');
-			}
+			// [Bonus 2] Aplic tema salvata inainte de randarea paginii.
+			(function() {
+				var tema = localStorage.getItem('tema');
+				if (tema === 'light') {
+					document.documentElement.classList.add('tema-light');
+				} else if (tema === 'sepia') {
+					document.documentElement.classList.add('tema-sepia');
+				}
+			})();
 		</script>

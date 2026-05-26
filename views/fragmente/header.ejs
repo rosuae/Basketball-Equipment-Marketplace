@@ -27,6 +27,7 @@
                 </ul>
             </li>
 
+            <!-- [Etapa 6] format-entitati - Meniu. Împărțirea pe categorii mari -->
             <li>
                 <a href="/produse" class="menu-link">
                     <i class="fa-solid fa-layer-group menu-icon"></i>
@@ -71,33 +72,39 @@
             </li>
         </ul>
     </nav>
-    <button id="btn-tema" class="btn btn-outline-warning mt-2 ms-3" aria-label="Schimba tema" title="Schimba tema" style="width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-        <i class="fa-solid fa-moon" id="icon-tema" style="font-size: 1.2rem;"></i>
-    </button>
+    <!-- [Bonus 2] Selector simplu pentru 3 teme memorate in localStorage. -->
+    <div class="theme-switcher">
+        <label for="tema-select" class="theme-switcher__label">Tema</label>
+        <select id="tema-select" class="theme-switcher__select" aria-label="Alege tema site-ului">
+            <option value="dark">Dark</option>
+            <option value="light">Light</option>
+            <option value="sepia">Sepia</option>
+        </select>
+    </div>
     <script>
         (function() {
-            var btn = document.getElementById('btn-tema');
-            var icon = document.getElementById('icon-tema');
-            
-            function updateIcon() {
-                if (document.documentElement.classList.contains('tema-light')) {
-                    icon.className = 'fa-solid fa-sun';
-                } else {
-                    icon.className = 'fa-solid fa-moon';
+            var selectTema = document.getElementById('tema-select');
+            var temeValide = ['dark', 'light', 'sepia'];
+
+            function aplicaTema(tema) {
+                document.documentElement.classList.remove('tema-light', 'tema-sepia');
+                if (tema === 'light') {
+                    document.documentElement.classList.add('tema-light');
+                } else if (tema === 'sepia') {
+                    document.documentElement.classList.add('tema-sepia');
                 }
+                localStorage.setItem('tema', tema);
+                selectTema.value = tema;
             }
-            
-            // Seteaza icon-ul corect initial
-            updateIcon();
-            
-            btn.addEventListener('click', function() {
-                document.documentElement.classList.toggle('tema-light');
-                if (document.documentElement.classList.contains('tema-light')) {
-                    localStorage.setItem('tema', 'light');
-                } else {
-                    localStorage.setItem('tema', 'dark');
-                }
-                updateIcon();
+
+            var temaSalvata = localStorage.getItem('tema');
+            if (temeValide.indexOf(temaSalvata) === -1) {
+                temaSalvata = 'dark';
+            }
+            aplicaTema(temaSalvata);
+
+            selectTema.addEventListener('change', function() {
+                aplicaTema(selectTema.value);
             });
         })();
     </script>

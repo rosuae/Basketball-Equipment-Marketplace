@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ro">
+  <head>
+    <%- include('../fragmente/head', { title: title }) %>
+  </head>
+  <body>
+    <%- include('../fragmente/header') %>
+
+    <main>
+      <section class="oferta-pagina">
+        <h1>Oferte active</h1>
+        <%
+          const formatOfertaDate = (value) => {
+            if (!value) return '';
+            const data = new Date(value);
+            return new Intl.DateTimeFormat('ro-RO', {
+              day: '2-digit',
+              month: 'long',
+              year: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit',
+              second: '2-digit'
+            }).format(data);
+          };
+        %>
+        <% if (ofertaCurenta) { %>
+          <article class="oferta-vedeta" data-finalizare="<%= ofertaCurenta['data-finalizare'] %>">
+            <span class="oferta-vedeta__eticheta">Oferta activa</span>
+            <h2><%= ofertaCurenta.categorie %></h2>
+            <p>Reducere curenta: <strong><%= ofertaCurenta.reducere %>%</strong></p>
+            <p>Se finalizeaza la: <time datetime="<%= ofertaCurenta['data-finalizare'] %>"><%= formatOfertaDate(ofertaCurenta['data-finalizare']) %></time></p>
+          </article>
+        <% } else { %>
+          <p class="mesaj-gol">Momentan nu exista o oferta activa.</p>
+        <% } %>
+
+        <% if (istoricOferte && istoricOferte.length > 0) { %>
+          <section class="istoric-oferte">
+            <h2>Istoric recent</h2>
+            <ul>
+              <% for (let oferta of istoricOferte.slice(0, 5)) { %>
+                <li>
+                  <strong><%= oferta.categorie %></strong> - <%= oferta.reducere %>%
+                  (<time datetime="<%= oferta['data-incepere'] %>"><%= formatOfertaDate(oferta['data-incepere']) %></time> - <time datetime="<%= oferta['data-finalizare'] %>"><%= formatOfertaDate(oferta['data-finalizare']) %></time>)
+                </li>
+              <% } %>
+            </ul>
+          </section>
+        <% } %>
+      </section>
+    </main>
+
+    <%- include('../fragmente/footer') %>
+  </body>
+</html>

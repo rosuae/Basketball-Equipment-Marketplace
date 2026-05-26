@@ -1,0 +1,16 @@
+{
+  "oferte": [
+    {
+      "categorie": "Mingi",
+      "data-incepere": "2026-05-26T10:12:07.573Z",
+      "data-finalizare": "2026-05-26T10:14:07.573Z",
+      "reducere": 15
+    },
+    {
+      "categorie": "Accesorii",
+      "data-incepere": "2026-05-26T09:40:12.030Z",
+      "data-finalizare": "2026-05-26T09:42:12.030Z",
+      "reducere": 35
+    }
+  ]
+}
